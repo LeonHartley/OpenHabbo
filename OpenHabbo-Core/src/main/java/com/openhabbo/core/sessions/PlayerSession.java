@@ -1,18 +1,20 @@
 package com.openhabbo.core.sessions;
 
+import com.openhabbo.api.communication.data.IncomingMessageWrapper;
+import com.openhabbo.api.communication.events.EventHandler;
 import com.openhabbo.api.communication.events.EventRegistry;
 import com.openhabbo.api.communication.events.MessageEvent;
 import com.openhabbo.api.communication.sessions.Session;
 import com.openhabbo.core.sessions.components.MessageEventContainer;
 import com.openhabbo.core.sessions.messaging.HandshakeMessageHandler;
 
-public class PlayerSession implements Session, EventRegistry {
+public class PlayerSession implements Session, EventRegistry, EventHandler {
     private final MessageEventContainer messageEventContainer;
 
     private HandshakeMessageHandler handshakeMessageHandler;
 
     public PlayerSession() {
-        this.messageEventContainer = new MessageEventContainer();
+        this.messageEventContainer = new MessageEventContainer(this);
 
         // Event handlers would be instantiated here, although they would not be registered until
         // the session is fully initialized. Also, the messages should only be registered
@@ -39,5 +41,10 @@ public class PlayerSession implements Session, EventRegistry {
     @Override
     public void unregisterEvent(Class event) {
         this.messageEventContainer.unregisterEvent(event);
+    }
+
+    @Override
+    public void handleEvent(short headerId, IncomingMessageWrapper messageWrapper) {
+        this.messageEventContainer.handleEvent(headerId, messageWrapper);
     }
 }

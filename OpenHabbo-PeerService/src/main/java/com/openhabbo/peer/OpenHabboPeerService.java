@@ -2,6 +2,7 @@ package com.openhabbo.peer;
 
 import com.openhabbo.config.OpenHabboPeerServiceConfiguration;
 import com.openhabbo.config.OpenHabboServiceConfiguration;
+import com.openhabbo.peer.web.PeerWebService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,6 +28,11 @@ public class OpenHabboPeerService {
         // load configuration.
         this.serviceConfiguration = OpenHabboServiceConfiguration.loadConfiguration();
         this.peerServiceConfiguration = OpenHabboPeerServiceConfiguration.loadConfiguration();
+
+        this.log.info("Initializing web service");
+
+        // initialize web service
+        PeerWebService.getInstance().initialize();
     }
 
     public String[] getRuntimeArguments() {
