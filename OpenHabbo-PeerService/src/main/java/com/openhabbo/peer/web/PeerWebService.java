@@ -1,10 +1,12 @@
 package com.openhabbo.peer.web;
 
+import com.openhabbo.commons.logging.JettyLogger;
 import com.openhabbo.commons.web.DefaultWebServiceFilters;
 import com.openhabbo.peer.OpenHabboPeerService;
+import org.eclipse.jetty.util.log.Log;
 import spark.Spark;
 
-import static spark.Spark.*;
+import static spark.Spark.get;
 
 public class PeerWebService {
     private static PeerWebService peerWebService;
@@ -13,6 +15,8 @@ public class PeerWebService {
     }
 
     public void initialize() {
+        Log.setLog(new JettyLogger());
+
         // configure the web service.
         Spark.port(OpenHabboPeerService.getInstance().getPeerServiceConfiguration().getServicePort());
         DefaultWebServiceFilters.apply(OpenHabboPeerService.getInstance().getServiceConfiguration());
@@ -25,7 +29,7 @@ public class PeerWebService {
     }
 
     public static PeerWebService getInstance() {
-        if(peerWebService == null) {
+        if (peerWebService == null) {
             peerWebService = new PeerWebService();
         }
 

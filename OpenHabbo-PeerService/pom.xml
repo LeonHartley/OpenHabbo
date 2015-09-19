@@ -17,7 +17,17 @@
     <dependencies>
         <dependency>
             <groupId>OpenHabbo</groupId>
+            <artifactId>OpenHabbo-Commons</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>OpenHabbo</groupId>
             <artifactId>OpenHabbo-Config</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>OpenHabbo</groupId>
+            <artifactId>OpenHabbo-Core</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

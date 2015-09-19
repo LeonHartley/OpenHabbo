@@ -2,9 +2,12 @@ package com.openhabbo.peer;
 
 import com.openhabbo.config.OpenHabboPeerServiceConfiguration;
 import com.openhabbo.config.OpenHabboServiceConfiguration;
+import com.openhabbo.peer.networking.GameNetworkService;
 import com.openhabbo.peer.web.PeerWebService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Properties;
 
 public class OpenHabboPeerService {
     private final Logger log = LogManager.getLogger(OpenHabboPeerService.class);
@@ -16,8 +19,9 @@ public class OpenHabboPeerService {
     private OpenHabboServiceConfiguration serviceConfiguration;
     private OpenHabboPeerServiceConfiguration peerServiceConfiguration;
 
-    public OpenHabboPeerService() {
+    private GameNetworkService gameNetworkService;
 
+    public OpenHabboPeerService() {
     }
 
     public void initialize(final String[] runtimeArguments) {
@@ -29,9 +33,13 @@ public class OpenHabboPeerService {
         this.serviceConfiguration = OpenHabboServiceConfiguration.loadConfiguration();
         this.peerServiceConfiguration = OpenHabboPeerServiceConfiguration.loadConfiguration();
 
-        this.log.info("Initializing web service");
+        // initialize game network service
+        this.log.info("Initializing game network service");
+        this.gameNetworkService = new GameNetworkService(this.peerServiceConfiguration);
+        this.gameNetworkService.initialize();
 
         // initialize web service
+        this.log.info("Initializing web service");
         PeerWebService.getInstance().initialize();
     }
 
