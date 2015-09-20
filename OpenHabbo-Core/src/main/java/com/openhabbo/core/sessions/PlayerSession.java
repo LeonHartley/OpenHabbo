@@ -9,8 +9,12 @@ import com.openhabbo.api.communication.sessions.Session;
 import com.openhabbo.core.sessions.components.MessageEventContainer;
 import com.openhabbo.core.sessions.messaging.HandshakeMessageHandler;
 import io.netty.channel.Channel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PlayerSession implements Session, EventRegistry {
+    private final Logger log = LogManager.getLogger(PlayerSession.class.getName());
+
     private final MessageEventContainer messageEventContainer;
     private final Channel channel;
 

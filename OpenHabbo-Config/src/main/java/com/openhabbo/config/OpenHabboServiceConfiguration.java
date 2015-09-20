@@ -18,7 +18,8 @@ public class OpenHabboServiceConfiguration {
     private final List<String> allowedIpAddresses;
 
     public OpenHabboServiceConfiguration(List<String> peerServices, List<String> authServices,
-                                         List<String> accountServices, String authenticationToken, List<String> allowedIpAddresses) {
+                                         List<String> accountServices, String authenticationToken,
+                                         List<String> allowedIpAddresses) {
         this.peerServices = peerServices;
         this.authServices = authServices;
         this.accountServices = accountServices;
@@ -36,7 +37,10 @@ public class OpenHabboServiceConfiguration {
         final String authenticationToken = config.getString("openhabbo-services.security.authenticationToken");
         final List<String> allowedIpAddresses = config.getStringList("openhabbo-services.security.allowedIpAddresses");
 
-        log.debug("Service configuration loaded, found {} peer service(s), {} auth service(s) and {} account service(s).",
+        log.debug("Service configuration loaded, found " +
+                        "{} peer service(s), " +
+                        "{} auth service(s) and " +
+                        "{} account service(s).",
                 peerServices.size(), authServices.size(), accountServices.size());
 
         return new OpenHabboServiceConfiguration(peerServices, authServices, accountServices, authenticationToken,

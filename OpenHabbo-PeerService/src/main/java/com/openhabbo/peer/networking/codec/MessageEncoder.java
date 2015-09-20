@@ -12,9 +12,5 @@ public class MessageEncoder extends MessageToByteEncoder<MessageComposer> {
         MessageComposerData data = new MessageComposerData(byteBuf);
 
         composer.onCompose(data);
-//
-//        if (!composer.hasLength()) {
-//            composer.content().setInt(0, composer.content().writerIndex() - 4);
-//        }
     }
 }
