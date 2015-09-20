@@ -31,8 +31,12 @@ public class SessionFactory {
     }
 
     public Session createSession(Channel channel) {
-        // TODO: this.
-        return null;
+        final PlayerSession playerSession = new PlayerSession(channel);
+
+        channel.attr(SESSION_ATTRIBUTE).set(playerSession);
+
+        channels.add(channel);
+        return playerSession;
     }
 
     public static SessionFactory getInstance() {

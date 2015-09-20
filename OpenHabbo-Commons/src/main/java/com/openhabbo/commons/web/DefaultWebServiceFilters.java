@@ -12,8 +12,8 @@ public class DefaultWebServiceFilters {
 
         before((req, res) -> {
             if(req.headers(AUTHENTICATION_HEADER) == null || !req.headers(AUTHENTICATION_HEADER).equals(config.getAuthenticationToken())) {
-                res.type("text/plain");
-                halt(401, "Authentication failed");
+                res.type("application/json");
+                halt(401, "{\"error\": \"Invalid authentication key\"}");
             }
         });
     }
