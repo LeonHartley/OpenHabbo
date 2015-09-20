@@ -6,6 +6,7 @@ import com.openhabbo.api.communication.events.EventHandler;
 import com.openhabbo.api.communication.events.EventRegistry;
 import com.openhabbo.api.communication.events.MessageEvent;
 import com.openhabbo.api.communication.sessions.Session;
+import com.openhabbo.api.communication.sessions.util.DisconnectReason;
 import com.openhabbo.core.sessions.components.MessageEventContainer;
 import com.openhabbo.core.sessions.messaging.HandshakeMessageHandler;
 import io.netty.channel.Channel;
@@ -44,6 +45,12 @@ public class PlayerSession implements Session, EventRegistry {
     @Override
     public void send(MessageComposer composer) {
         this.channel.writeAndFlush(composer);
+    }
+
+    @Override
+    public void disconnect(DisconnectReason reason) {
+        // Log the disconnection along with the reason.
+        this.channel.disconnect();
     }
 
     @Override

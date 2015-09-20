@@ -9,12 +9,17 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 @ChannelHandler.Sharable
 public class ClientHandler extends SimpleChannelInboundHandler<IncomingMessageWrapper> {
     private static final Logger log = LogManager.getLogger(ClientHandler.class.getName());
     private static ChannelHandler instance;
 
+    private final AtomicInteger activeConnections = new AtomicInteger(0);
+
     @Override
+<<<<<<< HEAD
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, IncomingMessageWrapper wrapper) throws Exception {
         Session session = channelHandlerContext.channel().attr(SessionFactory.SESSION_ATTRIBUTE).get();
 
@@ -38,6 +43,21 @@ public class ClientHandler extends SimpleChannelInboundHandler<IncomingMessageWr
             log.info(wrapper.readString());
             log.info(wrapper.readString());
         }
+=======
+    public void channelActive(ChannelHandlerContext ctx) throws java.lang.Exception {
+        this.activeConnections.incrementAndGet();
+
+        Session session = SessionFactory.getInstance().createSession(ctx.channel());
+
+        if(session == null) {
+            // disconnect if the session was not created successfully.
+            ctx.close();
+        }
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, IncomingMessageWrapper wrapper) throws Exception {
+>>>>>>> c5c278df3a8fdfc485017c823e5504594d060923
     }
 
     public static ChannelHandler getInstance() {

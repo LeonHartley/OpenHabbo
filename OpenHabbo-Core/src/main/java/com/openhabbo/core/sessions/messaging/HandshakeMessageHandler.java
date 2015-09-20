@@ -28,6 +28,6 @@ public class HandshakeMessageHandler implements SessionComponent {
     }
 
     public void onAuthRequest(SSOTicketMessageParser parser) {
-        log.info("Player attempting to login with ticket \"{}\"", "");
+        log.info("Player attempting to login with ticket \"{}\"", parser.getSsoTicket());
     }
 }
