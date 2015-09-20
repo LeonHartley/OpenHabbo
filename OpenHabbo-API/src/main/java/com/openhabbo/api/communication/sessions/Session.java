@@ -4,6 +4,8 @@ import com.openhabbo.api.communication.composers.MessageComposer;
 import com.openhabbo.api.communication.events.EventHandler;
 import com.openhabbo.api.communication.sessions.util.DisconnectReason;
 
+import java.util.UUID;
+
 public interface Session extends EventHandler {
     void initialize();
 
@@ -12,4 +14,8 @@ public interface Session extends EventHandler {
     void send(MessageComposer composer);
 
     void disconnect(DisconnectReason reason);
+
+    UUID getSessionId();
+
+    boolean isInitialized();
 }

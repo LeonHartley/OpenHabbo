@@ -12,6 +12,7 @@ public class HandshakeMessageHandler implements SessionComponent {
     private static final Logger log = LogManager.getLogger(HandshakeMessageHandler.class);
 
     private final PlayerSession playerSession;
+    private boolean authRequestReceived = false;
 
     public HandshakeMessageHandler(PlayerSession playerSession) {
         this.playerSession = playerSession;
@@ -24,10 +25,18 @@ public class HandshakeMessageHandler implements SessionComponent {
 
     @Override
     public void dispose() {
-        this.playerSession.unregisterEvent(SSOTicketMessageEvent.class);
+        if(!this.authRequestReceived) {
+            this.playerSession.unregisterEvent(SSOTicketMessageEvent.class);
+        }
     }
 
     public void onAuthRequest(SSOTicketMessageParser parser) {
-        log.info("Player attempting to login with ticket \"{}\"", parser.getSsoTicket());
+        log.trace("Player attempting to login with ticket \"{}\"", parser.getSsoTicket());
+
+        this.authRequestReceived = true;
+
+        // submit authentication request to an auth service.
+
+        this.playerSession.unregisterEvent(SSOTicketMessageEvent.class);
     }
 }

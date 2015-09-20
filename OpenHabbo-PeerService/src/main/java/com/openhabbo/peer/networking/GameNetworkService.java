@@ -1,5 +1,7 @@
 package com.openhabbo.peer.networking;
 
+import com.openhabbo.api.communication.headers.MessageHeaderProviderService;
+import com.openhabbo.communication.headers.DefaultMessageHeaderProvider;
 import com.openhabbo.config.OpenHabboPeerServiceConfiguration;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -22,6 +24,9 @@ public class GameNetworkService {
 
     public GameNetworkService(OpenHabboPeerServiceConfiguration configuration) {
         this.configuration = configuration;
+
+        // configure the message header provider service
+        MessageHeaderProviderService.set(new DefaultMessageHeaderProvider());
     }
 
     public void initialize() {

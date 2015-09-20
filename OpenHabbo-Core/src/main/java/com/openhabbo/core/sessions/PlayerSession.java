@@ -13,15 +13,21 @@ import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.UUID;
+
 public class PlayerSession implements Session, EventRegistry {
     private final Logger log = LogManager.getLogger(PlayerSession.class.getName());
 
+    private final UUID sessionId;
     private final MessageEventContainer messageEventContainer;
     private final Channel channel;
 
+    private boolean initialized = false;
+
     private final HandshakeMessageHandler handshakeMessageHandler;
 
-    public PlayerSession(Channel channel) {
+    public PlayerSession(UUID sessionId, Channel channel) {
+        this.sessionId = sessionId;
         this.messageEventContainer = new MessageEventContainer(this);
         this.channel = channel;
 
@@ -34,6 +40,8 @@ public class PlayerSession implements Session, EventRegistry {
     @Override
     public void initialize() {
         this.handshakeMessageHandler.initialize();
+
+        this.initialized = true;
     }
 
     @Override
@@ -66,5 +74,14 @@ public class PlayerSession implements Session, EventRegistry {
     @Override
     public void handleEvent(short headerId, IncomingMessageWrapper messageWrapper) {
         this.messageEventContainer.handleEvent(headerId, messageWrapper);
+    }
+
+    public UUID getSessionId() {
+        return sessionId;
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return this.initialized;
     }
 }

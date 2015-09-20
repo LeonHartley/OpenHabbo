@@ -3,11 +3,12 @@ package com.openhabbo.peer;
 import com.openhabbo.config.OpenHabboPeerServiceConfiguration;
 import com.openhabbo.config.OpenHabboServiceConfiguration;
 import com.openhabbo.peer.networking.GameNetworkService;
+import com.openhabbo.peer.networking.codec.encoding.Base64Codec;
 import com.openhabbo.peer.web.PeerWebService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Properties;
+import java.math.BigInteger;
 
 public class OpenHabboPeerService {
     private final Logger log = LogManager.getLogger(OpenHabboPeerService.class);
@@ -26,6 +27,8 @@ public class OpenHabboPeerService {
 
     public void initialize(final String[] runtimeArguments) {
         this.runtimeArguments = runtimeArguments;
+
+        System.out.println(new String(Base64Codec.encodeInt("@@J@HHey!! :D".length(), 3)));
 
         this.log.info("Initializing OpenHabbo Peer Service");
 

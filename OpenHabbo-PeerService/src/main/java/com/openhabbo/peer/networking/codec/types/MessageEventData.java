@@ -1,8 +1,8 @@
 package com.openhabbo.peer.networking.codec.types;
 
 import com.openhabbo.api.communication.data.IncomingMessageWrapper;
-import com.openhabbo.peer.networking.codec.habbo.Base64Codec;
-import com.openhabbo.peer.networking.codec.habbo.WireCodec;
+import com.openhabbo.peer.networking.codec.encoding.Base64Codec;
+import com.openhabbo.peer.networking.codec.encoding.WireCodec;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.CharsetUtil;
 

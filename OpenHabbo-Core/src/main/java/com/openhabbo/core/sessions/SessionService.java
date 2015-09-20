@@ -10,38 +10,39 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
-public class SessionFactory {
-    private static SessionFactory sessionFactory;
+public class SessionService {
+    private static SessionService sessionFactory;
 
-    private static final Logger log = LogManager.getLogger(SessionFactory.class.getName());
+    private static final Logger log = LogManager.getLogger(SessionService.class.getName());
 
     public static final AttributeKey<Session> SESSION_ATTRIBUTE = AttributeKey.valueOf("OpenHabbo.Session");
-    public static final AttributeKey<Session> CHANNEL_ID_ATTRIBUTE = AttributeKey.valueOf("OpenHabbo.Session.ChannelId");
+//    public static final AttributeKey<UUID> CHANNEL_ID_ATTRIBUTE = AttributeKey.valueOf("OpenHabbo.Session.ChannelId");
 
-    private final AtomicInteger sessionIds = new AtomicInteger();
-    private final Map<Integer, Session> sessions;
-
+    private final Map<UUID, Session> sessions;
     private final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
-    public SessionFactory() {
+    public SessionService() {
         this.sessions = new ConcurrentHashMap<>();
     }
 
     public Session createSession(Channel channel) {
-        final PlayerSession playerSession = new PlayerSession(channel);
+        final UUID sessionId = UUID.randomUUID();
+        final PlayerSession playerSession = new PlayerSession(sessionId, channel);
 
         channel.attr(SESSION_ATTRIBUTE).set(playerSession);
 
-        channels.add(channel);
+        this.channels.add(channel);
+        this.sessions.put(sessionId, playerSession);
+
         return playerSession;
     }
 
-    public static SessionFactory getInstance() {
+    public static SessionService getInstance() {
         if(sessionFactory == null) {
-            sessionFactory = new SessionFactory();
+            sessionFactory = new SessionService();
         }
 
         return sessionFactory;

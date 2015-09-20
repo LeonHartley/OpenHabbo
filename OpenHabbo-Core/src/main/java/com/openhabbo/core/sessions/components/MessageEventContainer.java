@@ -42,6 +42,9 @@ public class MessageEventContainer implements EventHandler, EventRegistry {
         if (!this.classToHeader.containsKey(messageEvent.getClass())) {
             this.classToHeader.put(messageEvent.getClass(), messageHeader);
         }
+
+
+        log.trace("Event {} was registered", messageEvent.getClass().getName());
     }
 
     public void unregisterAllEvents() {
@@ -65,7 +68,7 @@ public class MessageEventContainer implements EventHandler, EventRegistry {
             return;
         }
 
-        log.info("Event {} was unregistered", eventClass.getName());
+        log.trace("Event {} was unregistered", eventClass.getName());
         this.messageListeners.get(header).clear();
         this.classToHeader.remove(eventClass);
     }

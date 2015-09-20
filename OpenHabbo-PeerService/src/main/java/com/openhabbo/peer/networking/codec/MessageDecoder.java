@@ -1,6 +1,6 @@
 package com.openhabbo.peer.networking.codec;
 
-import com.openhabbo.peer.networking.codec.habbo.Base64Codec;
+import com.openhabbo.peer.networking.codec.encoding.Base64Codec;
 import com.openhabbo.peer.networking.codec.types.MessageEventData;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

@@ -1,4 +1,4 @@
-package com.openhabbo.peer.networking.codec.habbo;
+package com.openhabbo.peer.networking.codec.encoding;
 
 public class WireCodec {
     public static final byte NEGATIVE = 72;
