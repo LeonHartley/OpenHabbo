@@ -1,14 +1,22 @@
 package com.openhabbo.peer;
 
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.async.Callback;
+import com.mashape.unirest.http.exceptions.UnirestException;
+import com.openhabbo.api.communication.data.OutgoingMessageWrapper;
+import com.openhabbo.commons.web.WebClient;
+import com.openhabbo.commons.web.requests.peer.PeerSendMessage;
+import com.openhabbo.communication.composers.AbstractMessageComposer;
 import com.openhabbo.config.OpenHabboPeerServiceConfiguration;
 import com.openhabbo.config.OpenHabboServiceConfiguration;
 import com.openhabbo.peer.networking.GameNetworkService;
-import com.openhabbo.peer.networking.codec.encoding.Base64Codec;
 import com.openhabbo.peer.web.PeerWebService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.math.BigInteger;
+import java.util.UUID;
+
 
 public class OpenHabboPeerService {
     private final Logger log = LogManager.getLogger(OpenHabboPeerService.class);
@@ -28,8 +36,6 @@ public class OpenHabboPeerService {
     public void initialize(final String[] runtimeArguments) {
         this.runtimeArguments = runtimeArguments;
 
-        System.out.println(new String(Base64Codec.encodeInt("@@J@HHey!! :D".length(), 3)));
-
         this.log.info("Initializing OpenHabbo Peer Service");
 
         // load configuration.
@@ -43,11 +49,8 @@ public class OpenHabboPeerService {
 
         // initialize web service
         this.log.info("Initializing web service");
+        WebClient.getInstance().initialize(this.serviceConfiguration);
         PeerWebService.getInstance().initialize();
-    }
-
-    public String[] getRuntimeArguments() {
-        return runtimeArguments;
     }
 
     public OpenHabboServiceConfiguration getServiceConfiguration() {
@@ -56,6 +59,10 @@ public class OpenHabboPeerService {
 
     public OpenHabboPeerServiceConfiguration getPeerServiceConfiguration() {
         return peerServiceConfiguration;
+    }
+
+    public String[] getRuntimeArguments() {
+        return runtimeArguments;
     }
 
     public static void main(String[] args) {
