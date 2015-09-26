@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MessageEventContainer implements EventHandler, EventRegistry {
     private static final Logger log = LogManager.getLogger(MessageEventContainer.class);
 
-    private Map<Short, List<MessageEvent>> messageListeners;
+    private final Map<Short, List<MessageEvent>> messageListeners;
     private Map<Class, Short> classToHeader;
 
     private PlayerSession playerSession;
@@ -36,7 +36,7 @@ public class MessageEventContainer implements EventHandler, EventRegistry {
         if (this.messageListeners.containsKey(messageHeader)) {
             this.messageListeners.get(messageHeader).add(messageEvent);
         } else {
-            this.messageListeners.put(messageHeader, CollectionsUtil.createList(messageEvent));
+            this.messageListeners.put(messageHeader, CollectionsUtil.createConcurrentList(messageEvent));
         }
 
         if (!this.classToHeader.containsKey(messageEvent.getClass())) {
@@ -75,16 +75,16 @@ public class MessageEventContainer implements EventHandler, EventRegistry {
 
     @Override
     public void handleEvent(short headerId, IncomingMessageWrapper messageWrapper) {
-        if(!this.messageListeners.containsKey(headerId)) {
+        if (!this.messageListeners.containsKey(headerId)) {
             return;
         }
 
-        List<MessageEvent> events = this.messageListeners.get(headerId);
+        final List<MessageEvent> events = this.messageListeners.get(headerId);
 
-        for(MessageEvent event : events) {
+        for (MessageEvent event : events) {
             try {
                 event.onComplete(messageWrapper);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 // todo: log
                 e.printStackTrace();
             }
