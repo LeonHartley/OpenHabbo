@@ -1,24 +1,27 @@
 package com.openhabbo.config;
 
+import com.openhabbo.config.services.OpenHabboService;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OpenHabboServiceConfiguration {
     private static final Logger log = LogManager.getLogger(OpenHabboServiceConfiguration.class);
 
-    private final List<String> peerServices;
-    private final List<String> authServices;
-    private final List<String> accountServices;
+    private final Map<String, OpenHabboService> peerServices;
+    private final Map<String, OpenHabboService> authServices;
+    private final Map<String, OpenHabboService> accountServices;
 
     private final String authenticationToken;
     private final List<String> allowedIpAddresses;
 
-    public OpenHabboServiceConfiguration(List<String> peerServices, List<String> authServices,
-                                         List<String> accountServices, String authenticationToken,
+    public OpenHabboServiceConfiguration(Map<String, OpenHabboService> peerServices, Map<String, OpenHabboService> authServices,
+                                         Map<String, OpenHabboService> accountServices, String authenticationToken,
                                          List<String> allowedIpAddresses) {
         this.peerServices = peerServices;
         this.authServices = authServices;
@@ -30,12 +33,31 @@ public class OpenHabboServiceConfiguration {
     public static OpenHabboServiceConfiguration loadConfiguration() {
         final Config config = ConfigFactory.load("openhabbo.conf");
 
-        final List<String> peerServices = config.getStringList("openhabbo-services.peerServices");
-        final List<String> authServices = config.getStringList("openhabbo-services.authServices");
-        final List<String> accountServices = config.getStringList("openhabbo-services.accountServices");
+        final List<String> peerServiceData = config.getStringList("openhabbo-services.peerServices");
+        final List<String> authServiceData = config.getStringList("openhabbo-services.authServices");
+        final List<String> accountServiceData = config.getStringList("openhabbo-services.accountServices");
 
         final String authenticationToken = config.getString("openhabbo-services.security.authenticationToken");
         final List<String> allowedIpAddresses = config.getStringList("openhabbo-services.security.allowedIpAddresses");
+
+        final Map<String, OpenHabboService> peerServices = new HashMap<>();
+        final Map<String, OpenHabboService> authServices = new HashMap<>();
+        final Map<String, OpenHabboService> accountServices = new HashMap<>();
+
+        for(String peerService : peerServiceData) {
+            OpenHabboService service = OpenHabboService.create(peerService);
+            peerServices.put(service.getAlias(), service);
+        }
+
+        for(String authService : authServiceData) {
+            OpenHabboService service = OpenHabboService.create(authService);
+            authServices.put(service.getAlias(), service);
+        }
+
+        for(String accountService : accountServiceData) {
+            OpenHabboService service = OpenHabboService.create(accountService);
+            accountServices.put(service.getAlias(), service);
+        }
 
         log.debug("Service configuration loaded, found " +
                         "{} peer service(s), " +
@@ -47,15 +69,15 @@ public class OpenHabboServiceConfiguration {
                 allowedIpAddresses);
     }
 
-    public List<String> getPeerServices() {
+    public Map<String, OpenHabboService> getPeerServices() {
         return peerServices;
     }
 
-    public List<String> getAuthServices() {
+    public Map<String, OpenHabboService> getAuthServices() {
         return authServices;
     }
 
-    public List<String> getAccountServices() {
+    public Map<String, OpenHabboService> getAccountServices() {
         return accountServices;
     }
 

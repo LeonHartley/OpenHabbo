@@ -40,6 +40,10 @@ public class SessionService {
         return playerSession;
     }
 
+    public Session getSessionById(UUID id) {
+        return this.sessions.get(id);
+    }
+
     public static SessionService getInstance() {
         if(sessionFactory == null) {
             sessionFactory = new SessionService();
