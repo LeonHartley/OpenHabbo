@@ -7,6 +7,7 @@ import com.mashape.unirest.http.async.Callback;
 import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
 import com.openhabbo.commons.web.requests.ServiceRequest;
+import com.openhabbo.commons.web.requests.types.MasterServiceRequest;
 import com.openhabbo.commons.web.requests.types.PeerServiceRequest;
 import com.openhabbo.config.OpenHabboServiceConfiguration;
 import com.openhabbo.config.services.OpenHabboService;
@@ -30,46 +31,59 @@ public class WebClient {
         this.serviceConfiguration = serviceConfiguration;
     }
 
-    public void submitRequest(String serviceAlias, ServiceRequest serviceRequest, Callback<JsonNode> callback) {
-        if(this.serviceConfiguration == null) {
+    public void dispatchRequest(String serviceAlias, ServiceRequest serviceRequest) {
+        this.dispatchRequest(serviceAlias, serviceRequest, null);
+    }
+
+    public void dispatchRequest(String serviceAlias, ServiceRequest serviceRequest, Callback<JsonNode> callback) {
+        if (this.serviceConfiguration == null) {
             log.warn("WebClient is not initialized, no services could be found");
             return;
         }
 
         OpenHabboService service = null;
 
-        if(serviceRequest instanceof PeerServiceRequest) {
+        if (serviceRequest instanceof PeerServiceRequest) {
             service = this.serviceConfiguration.getPeerServices().get(serviceAlias);
+        } else if(serviceRequest instanceof MasterServiceRequest) {
+            service = this.serviceConfiguration.getMasterService();
         }
 
-        if(service == null) {
+        if (service == null) {
             log.warn("Failed to find service, request cancelled");
             return;
         }
 
         String url = "http://" + service.getUrl() + serviceRequest.getEndpoint();
+        final Map<String, Object> parameters = serviceRequest.getParameters();
 
-        for(Map.Entry<String, Object> urlParam : serviceRequest.getParameters().entrySet()) {
-            url = url.replace(":" + urlParam.getKey(), urlParam.getValue().toString());
+        if (parameters != null) {
+            for (Map.Entry<String, Object> urlParam : parameters.entrySet()) {
+                url = url.replace(":" + urlParam.getKey(), urlParam.getValue().toString());
+            }
         }
 
         HttpRequest request = this.createRequest(serviceRequest.getMethod(), url);
 
-        if(request == null) {
+        if (request == null) {
             return;
         }
 
         request.header(AUTHENTICATION_HEADER, this.serviceConfiguration.getAuthenticationToken());
 
-        if(serviceRequest.getMethod() != HttpMethod.GET) {
+        if (serviceRequest.getMethod() != HttpMethod.GET) {
             serviceRequest.applyFields(((HttpRequestWithBody) request));
         }
 
-        request.asJsonAsync(callback);
+        if (callback == null) {
+            request.asStringAsync();
+        } else {
+            request.asJsonAsync(callback);
+        }
     }
 
     private HttpRequest createRequest(HttpMethod method, String url) {
-        switch(method) {
+        switch (method) {
             case GET:
                 return Unirest.get(url);
 
@@ -81,7 +95,7 @@ public class WebClient {
     }
 
     public static WebClient getInstance() {
-        if(webClient == null) {
+        if (webClient == null) {
             webClient = new WebClient();
         }
 

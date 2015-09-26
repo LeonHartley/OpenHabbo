@@ -2,7 +2,11 @@ package com.openhabbo.peer.networking.clients;
 
 import com.openhabbo.api.communication.data.IncomingMessageWrapper;
 import com.openhabbo.api.communication.sessions.Session;
+import com.openhabbo.commons.web.WebClient;
+import com.openhabbo.commons.web.requests.master.MasterSessionRegisterMessage;
+import com.openhabbo.commons.web.requests.master.MasterSessionUnregisterMessage;
 import com.openhabbo.core.sessions.SessionService;
+import com.openhabbo.peer.OpenHabboPeerService;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -55,6 +59,9 @@ public class ClientHandler extends SimpleChannelInboundHandler<IncomingMessageWr
             ctx.close();
             return;
         }
+
+        WebClient.getInstance().dispatchRequest("master", new MasterSessionRegisterMessage(session.getSessionId(),
+                OpenHabboPeerService.getInstance().getServiceAlias()));
     }
 
     @Override
@@ -63,6 +70,8 @@ public class ClientHandler extends SimpleChannelInboundHandler<IncomingMessageWr
         Session session = ctx.channel().attr(SessionService.SESSION_ATTRIBUTE).get();
 
         if(session != null) {
+            WebClient.getInstance().dispatchRequest("master", new MasterSessionUnregisterMessage(session.getSessionId()));
+
             session.dispose();
         }
 

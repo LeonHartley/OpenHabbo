@@ -13,6 +13,8 @@ import java.util.Map;
 public class OpenHabboServiceConfiguration {
     private static final Logger log = LogManager.getLogger(OpenHabboServiceConfiguration.class);
 
+    private final OpenHabboService masterService;
+
     private final Map<String, OpenHabboService> peerServices;
     private final Map<String, OpenHabboService> authServices;
     private final Map<String, OpenHabboService> accountServices;
@@ -20,9 +22,12 @@ public class OpenHabboServiceConfiguration {
     private final String authenticationToken;
     private final List<String> allowedIpAddresses;
 
-    public OpenHabboServiceConfiguration(Map<String, OpenHabboService> peerServices, Map<String, OpenHabboService> authServices,
-                                         Map<String, OpenHabboService> accountServices, String authenticationToken,
-                                         List<String> allowedIpAddresses) {
+    public OpenHabboServiceConfiguration(OpenHabboService masterService,
+                                         Map<String, OpenHabboService> peerServices,
+                                         Map<String, OpenHabboService> authServices,
+                                         Map<String, OpenHabboService> accountServices,
+                                         String authenticationToken, List<String> allowedIpAddresses) {
+        this.masterService = masterService;
         this.peerServices = peerServices;
         this.authServices = authServices;
         this.accountServices = accountServices;
@@ -32,6 +37,8 @@ public class OpenHabboServiceConfiguration {
 
     public static OpenHabboServiceConfiguration loadConfiguration() {
         final Config config = ConfigFactory.load("openhabbo.conf");
+
+        final String masterService = config.getString("openhabbo-services.masterService");
 
         final List<String> peerServiceData = config.getStringList("openhabbo-services.peerServices");
         final List<String> authServiceData = config.getStringList("openhabbo-services.authServices");
@@ -44,17 +51,17 @@ public class OpenHabboServiceConfiguration {
         final Map<String, OpenHabboService> authServices = new HashMap<>();
         final Map<String, OpenHabboService> accountServices = new HashMap<>();
 
-        for(String peerService : peerServiceData) {
+        for (String peerService : peerServiceData) {
             OpenHabboService service = OpenHabboService.create(peerService);
             peerServices.put(service.getAlias(), service);
         }
 
-        for(String authService : authServiceData) {
+        for (String authService : authServiceData) {
             OpenHabboService service = OpenHabboService.create(authService);
             authServices.put(service.getAlias(), service);
         }
 
-        for(String accountService : accountServiceData) {
+        for (String accountService : accountServiceData) {
             OpenHabboService service = OpenHabboService.create(accountService);
             accountServices.put(service.getAlias(), service);
         }
@@ -65,7 +72,8 @@ public class OpenHabboServiceConfiguration {
                         "{} account service(s).",
                 peerServices.size(), authServices.size(), accountServices.size());
 
-        return new OpenHabboServiceConfiguration(peerServices, authServices, accountServices, authenticationToken,
+        return new OpenHabboServiceConfiguration(OpenHabboService.create(masterService), peerServices, authServices,
+                accountServices, authenticationToken,
                 allowedIpAddresses);
     }
 
@@ -87,5 +95,9 @@ public class OpenHabboServiceConfiguration {
 
     public List<String> getAllowedIpAddresses() {
         return allowedIpAddresses;
+    }
+
+    public OpenHabboService getMasterService() {
+        return masterService;
     }
 }

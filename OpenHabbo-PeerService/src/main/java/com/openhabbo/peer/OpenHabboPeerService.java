@@ -1,21 +1,12 @@
 package com.openhabbo.peer;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.async.Callback;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import com.openhabbo.api.communication.data.OutgoingMessageWrapper;
 import com.openhabbo.commons.web.WebClient;
-import com.openhabbo.commons.web.requests.peer.PeerSendMessage;
-import com.openhabbo.communication.composers.AbstractMessageComposer;
 import com.openhabbo.config.OpenHabboPeerServiceConfiguration;
 import com.openhabbo.config.OpenHabboServiceConfiguration;
 import com.openhabbo.peer.networking.GameNetworkService;
 import com.openhabbo.peer.web.PeerWebService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.UUID;
 
 
 public class OpenHabboPeerService {
@@ -30,13 +21,19 @@ public class OpenHabboPeerService {
 
     private GameNetworkService gameNetworkService;
 
+    private String serviceAlias = "peerservice-1";
+
     public OpenHabboPeerService() {
     }
 
     public void initialize(final String[] runtimeArguments) {
         this.runtimeArguments = runtimeArguments;
 
-        this.log.info("Initializing OpenHabbo Peer Service");
+        if(this.runtimeArguments.length != 0) {
+            this.serviceAlias = this.runtimeArguments[0].replace("--alias:", "");
+        }
+
+        this.log.info("Initializing OpenHabbo Peer Service ({})", this.serviceAlias);
 
         // load configuration.
         this.serviceConfiguration = OpenHabboServiceConfiguration.loadConfiguration();
@@ -63,6 +60,10 @@ public class OpenHabboPeerService {
 
     public String[] getRuntimeArguments() {
         return runtimeArguments;
+    }
+
+    public String getServiceAlias() {
+        return this.serviceAlias;
     }
 
     public static void main(String[] args) {

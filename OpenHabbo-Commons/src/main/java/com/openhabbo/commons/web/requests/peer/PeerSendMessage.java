@@ -35,11 +35,11 @@ public class PeerSendMessage extends PeerServiceRequest {
 
     @Override
     public void applyFields(HttpRequestWithBody request) {
-        if(messageComposer == null && this.messageComposers != null) {
+        if (messageComposer == null && this.messageComposers != null) {
             // we are sending multiple messages.
             List<Map<String, String>> messages = new ArrayList<>();
 
-            for(MessageComposer messageComposer : this.messageComposers) {
+            for (MessageComposer messageComposer : this.messageComposers) {
                 messages.add(new HashMap<String, String>() {{
                     put("messageClass", messageComposer.getClass().getName());
                     put("message", JsonUtil.stringify(messageComposer));
@@ -47,10 +47,10 @@ public class PeerSendMessage extends PeerServiceRequest {
             }
 
             request.field("messages", JsonUtil.stringify(messages));
-        } else if(messageComposer != null) {
+        } else if (messageComposer != null) {
             // we only want to send 1 message.
             request.field("messageClass", this.messageComposer.getClass().getName())
-                   .field("message", JsonUtil.stringify(this.messageComposer));
+                    .field("message", JsonUtil.stringify(this.messageComposer));
         }
     }
 

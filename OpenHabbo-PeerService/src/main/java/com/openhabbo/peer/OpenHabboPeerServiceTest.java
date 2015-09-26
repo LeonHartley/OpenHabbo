@@ -8,10 +8,7 @@ import com.openhabbo.api.communication.data.OutgoingMessageWrapper;
 import com.openhabbo.commons.web.WebClient;
 import com.openhabbo.commons.web.requests.peer.PeerSendMessage;
 import com.openhabbo.communication.composers.AbstractMessageComposer;
-import com.openhabbo.config.OpenHabboPeerServiceConfiguration;
 import com.openhabbo.config.OpenHabboServiceConfiguration;
-import com.openhabbo.peer.networking.GameNetworkService;
-import com.openhabbo.peer.web.PeerWebService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,23 +26,9 @@ public class OpenHabboPeerServiceTest {
         this.serviceConfiguration = OpenHabboServiceConfiguration.loadConfiguration();
 
         WebClient.getInstance().initialize(this.serviceConfiguration);
-//
-        WebClient.getInstance().submitRequest("peerservice-1", new PeerSendMessage(UUID.randomUUID(), new TestMessageComposer("Leon H")), new Callback<JsonNode>() {
-            @Override
-            public void completed(HttpResponse<JsonNode> httpResponse) {
-                log.info(httpResponse.getBody().toString());
-            }
 
-            @Override
-            public void failed(UnirestException e) {
-
-            }
-
-            @Override
-            public void cancelled() {
-
-            }
-        });
+        WebClient.getInstance().dispatchRequest("peerservice-1",
+                new PeerSendMessage(UUID.randomUUID(), new TestMessageComposer("Leon H")));
     }
 
     private class TestMessageComposer extends AbstractMessageComposer {
