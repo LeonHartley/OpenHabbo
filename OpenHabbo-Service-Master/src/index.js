@@ -1,13 +1,13 @@
-var redis = require('redis'),
-    client = redis.createClient(6379, "redis.eu.openhabbo.com"),
-    express = require('express'),
+var express = require('express'),
     bodyParser = require('body-parser'),
-    app = express();
+    app = express(),
+    http = require('http'),
+    monitoring = require('./monitoring/monitoring.js');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
 var sessions = require('./routes/sessions.js');
-sessions.initialize(client);
+sessions.initialize();
 
 app.post("/sessions/register", sessions.registerSession);
 app.post("/sessions/unregister", sessions.unregisterSession);
@@ -23,9 +23,23 @@ app.get('/', function(req, res) {
     res.end();
 });
 
+app.get('/initialize', function(req, res) {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+
+    res.write(JSON.stringify({
+        success: true
+    }));
+
+    res.end();
+});
+
+app.use("/events", express.static('web'));
+
 var server = app.listen(3000, function() {
     var host = server.address().address;
     var port = server.address().port;
 
     console.log('Master service listening at http://%s:%s', host, port);
 });
+
+monitoring.initialize(server);

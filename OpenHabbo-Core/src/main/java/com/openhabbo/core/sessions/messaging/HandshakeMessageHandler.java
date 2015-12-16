@@ -36,6 +36,7 @@ public class HandshakeMessageHandler implements SessionComponent {
         this.authRequestReceived = true;
 
         // submit authentication request to an auth service.
+        log.trace("Session ID: " + this.playerSession.getSessionId());
 
         this.playerSession.unregisterEvent(SSOTicketMessageEvent.class);
     }

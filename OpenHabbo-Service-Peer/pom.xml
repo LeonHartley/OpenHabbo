@@ -10,7 +10,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>OpenHabbo-PeerService</artifactId>
+    <artifactId>OpenHabbo-Service-Peer</artifactId>
     <version>1.0-SNAPSHOT</version>
 
 

@@ -35,12 +35,13 @@ public class ClientHandler extends SimpleChannelInboundHandler<IncomingMessageWr
             session.initialize();
         }
 
+        //topkek amirite?
         if (wrapper.getHeader() == 206) {
             channelHandlerContext.writeAndFlush("DAQBHHIIKHJIPAIQAdd-MM-yyyy\u0002SAHPB/client\u0002QBH\u0001");
             return;
         } else if(wrapper.getHeader() == 415) {
             channelHandlerContext.writeAndFlush("@BJSA\u0001");
-            channelHandlerContext.writeAndFlush("GLH\u0001DbIH\u0001@C\u0001HEI\u0001GGb[`H\u0001GJRGH\u0001LjIwelcome to openhabbo lets get this ball rollin'\u0002\u0001\n");
+            channelHandlerContext.writeAndFlush("GLH\u0001DbIH\u0001@C\u0001HEI\u0001GGb[`H\u0001GJRGH\u0001LjIYou are connected to: " + OpenHabboPeerService.getInstance().getServiceAlias() + "\u0002\u0001\n");
         }
 
         session.handleEvent(wrapper.getHeader(), wrapper);
@@ -59,9 +60,6 @@ public class ClientHandler extends SimpleChannelInboundHandler<IncomingMessageWr
             ctx.close();
             return;
         }
-
-        WebClient.getInstance().dispatchRequest("master", new MasterSessionRegisterMessage(session.getSessionId(),
-                OpenHabboPeerService.getInstance().getServiceAlias()));
     }
 
     @Override
@@ -70,12 +68,11 @@ public class ClientHandler extends SimpleChannelInboundHandler<IncomingMessageWr
         Session session = ctx.channel().attr(SessionService.SESSION_ATTRIBUTE).get();
 
         if(session != null) {
-            WebClient.getInstance().dispatchRequest("master", new MasterSessionUnregisterMessage(session.getSessionId()));
-
             session.dispose();
         }
 
         ctx.channel().attr(SessionService.SESSION_ATTRIBUTE).remove();
+        this.activeConnections.decrementAndGet();
     }
 
     public static ChannelHandler getInstance() {

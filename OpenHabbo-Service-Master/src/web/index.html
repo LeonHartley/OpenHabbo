@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>OpenHabbo: Live Event Monitoring</title>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha256-7s5uDGW3AHqw6xtJmNNtr+OBRJUlgkNJEo78P4b0yRw= sha512-nNo+yCHEyn0smMxSswnf/OnX6/KwJuZTlNZBjauKhTK0c+zT+q5JOCx0UFhXQ6rJR9jg6Es8gPuD2uZcYDLqSw=="
+          crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="assets/css/base.css" type="text/css"/>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        var socket = io.connect('http://localhost:3000');
+        socket.on('log', function (obj) {
+            $('#console').append("<li class='list-group-item'>[" + obj.data.level.toUpperCase() + "] " + obj.data.msg + "</li>");
+        });
+    </script>
+</head>
+
+<body>
+<div class="container">
+    <h2>OpenHabbo
+        <small>Event Monitoring</small>
+    </h2>
+
+    <div class="panel panel-default" style="min-height: 800px; max-height: 800px;
+    overflow: auto; overflow-y: scroll;">
+        <ul class="list-group" id="console">
+        </ul>
+    </div>
+</div>
+
+</body>
+
+</html>

@@ -7,6 +7,7 @@ import com.mashape.unirest.http.async.Callback;
 import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
 import com.openhabbo.commons.web.requests.ServiceRequest;
+import com.openhabbo.commons.web.requests.master.InitializeMasterMessage;
 import com.openhabbo.commons.web.requests.types.MasterServiceRequest;
 import com.openhabbo.commons.web.requests.types.PeerServiceRequest;
 import com.openhabbo.config.OpenHabboServiceConfiguration;
@@ -29,6 +30,8 @@ public class WebClient {
 
     public void initialize(OpenHabboServiceConfiguration serviceConfiguration) {
         this.serviceConfiguration = serviceConfiguration;
+
+        this.dispatchRequest("master", new InitializeMasterMessage(), null);
     }
 
     public void dispatchRequest(String serviceAlias, ServiceRequest serviceRequest) {

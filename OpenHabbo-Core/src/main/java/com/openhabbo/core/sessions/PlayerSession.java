@@ -7,6 +7,10 @@ import com.openhabbo.api.communication.events.EventRegistry;
 import com.openhabbo.api.communication.events.MessageEvent;
 import com.openhabbo.api.communication.sessions.Session;
 import com.openhabbo.api.communication.sessions.util.DisconnectReason;
+import com.openhabbo.commons.web.WebClient;
+import com.openhabbo.commons.web.requests.master.MasterSessionRegisterMessage;
+import com.openhabbo.commons.web.requests.master.MasterSessionUnregisterMessage;
+import com.openhabbo.config.services.OpenHabboService;
 import com.openhabbo.core.sessions.components.MessageEventContainer;
 import com.openhabbo.core.sessions.messaging.HandshakeMessageHandler;
 import io.netty.channel.Channel;
@@ -40,14 +44,19 @@ public class PlayerSession implements Session, EventRegistry {
     @Override
     public void initialize() {
         this.handshakeMessageHandler.initialize();
-
         this.initialized = true;
+
+        WebClient.getInstance().dispatchRequest("master", new MasterSessionRegisterMessage(this.getSessionId(), "peerservice-1"));
     }
 
     @Override
     public void dispose() {
         this.handshakeMessageHandler.dispose();
         this.messageEventContainer.unregisterAllEvents();
+
+        if(this.isInitialized()) {
+            WebClient.getInstance().dispatchRequest("master", new MasterSessionUnregisterMessage(this.getSessionId()));
+        }
     }
 
     @Override
