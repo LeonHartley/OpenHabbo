@@ -5,10 +5,17 @@ import io.netty.buffer.ByteBuf;
 
 public class MessageComposerData implements OutgoingMessageWrapper {
 
+    private final int header;
     private final ByteBuf buffer;
 
-    public MessageComposerData(ByteBuf buffer) {
+    public MessageComposerData(int header, ByteBuf buffer) {
+        this.header = header;
         this.buffer = buffer;
+    }
+
+    @Override
+    public int getHeader() {
+        return this.header;
     }
 
     @Override
