@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>OpenHabbo</groupId>
-    <artifactId>OpenHabbo-Service-Authentication</artifactId>
+    <artifactId>OpenHabbo-Service-Storage</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     

@@ -25,6 +25,9 @@ module.exports = {
     },
 
     unregisterSession: function(req, res) {
+        delete sessions[req.body.sessionId];
+        sendAsJson({ "success": true}, res);
+
         monitoring.getSockets().emit("log", {
             event: "log",
             data: {
@@ -32,9 +35,6 @@ module.exports = {
                 msg: "Session '" + req.body.sessionId + "' has been unregistered from service: " + sessions[req.body.sessionId].serviceAlias
             }
         });
-
-        delete sessions[req.body.sessionId];
-        sendAsJson({ "success": true}, res);
     },
 
     findAlias: function(req, res) {

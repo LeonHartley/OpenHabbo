@@ -23,8 +23,8 @@
         <module>OpenHabbo-Config</module>
 
         <module>OpenHabbo-Service-Peer</module>
-        <module>OpenHabbo-Service-Authentication</module>
         <module>OpenHabbo-Service-Master</module>
+        <module>OpenHabbo-Service-Storage</module>
     </modules>
 
     <dependencies>

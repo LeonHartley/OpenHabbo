@@ -25,10 +25,6 @@ public class WireCodec {
         return bytes;
     }
 
-    public static String encodeIntToStr(int i) {
-        return new String(WireCodec.encodeInt(i));
-    }
-
     public static int[] decodeInt(byte[] bytes) {
         int[] ret = new int[2];
         int pos = 0;

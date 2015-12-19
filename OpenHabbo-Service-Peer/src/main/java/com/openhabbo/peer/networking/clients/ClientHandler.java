@@ -75,11 +75,6 @@ public class ClientHandler extends SimpleChannelInboundHandler<IncomingMessageWr
         this.activeConnections.decrementAndGet();
     }
 
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        cause.printStackTrace();
-    }
-
     public static ChannelHandler getInstance() {
         if(instance == null) {
             instance = new ClientHandler();
