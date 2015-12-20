@@ -5,6 +5,8 @@ import com.openhabbo.api.communication.sessions.Session;
 import com.openhabbo.commons.web.WebClient;
 import com.openhabbo.commons.web.requests.master.MasterSessionRegisterMessage;
 import com.openhabbo.commons.web.requests.master.MasterSessionUnregisterMessage;
+import com.openhabbo.communication.composers.handshake.AuthenticationOKMessageComposer;
+import com.openhabbo.communication.composers.notifications.MOTDNotificationMessageComposer;
 import com.openhabbo.core.sessions.SessionService;
 import com.openhabbo.peer.OpenHabboPeerService;
 import io.netty.channel.ChannelHandler;
@@ -39,9 +41,6 @@ public class ClientHandler extends SimpleChannelInboundHandler<IncomingMessageWr
         if (wrapper.getHeader() == 206) {
             channelHandlerContext.writeAndFlush("DAQBHHIIKHJIPAIQAdd-MM-yyyy\u0002SAHPB/client\u0002QBH\u0001");
             return;
-        } else if(wrapper.getHeader() == 415) {
-            channelHandlerContext.writeAndFlush("@BJSA\u0001");
-            channelHandlerContext.writeAndFlush("GLH\u0001DbIH\u0001@C\u0001HEI\u0001GGb[`H\u0001GJRGH\u0001LjIYou are connected to: " + OpenHabboPeerService.getInstance().getServiceAlias() + "\u0002\u0001\n");
         }
 
         session.handleEvent(wrapper.getHeader(), wrapper);

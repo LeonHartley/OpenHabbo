@@ -1,8 +1,6 @@
 package com.openhabbo.api.communication.data;
 
 public interface OutgoingMessageWrapper {
-    int getHeader();
-
     void writeString(String data);
 
     void writeInteger(int data);

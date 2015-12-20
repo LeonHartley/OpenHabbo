@@ -1,29 +1,26 @@
 package com.openhabbo.peer.networking.codec.types;
 
+import com.openhabbo.api.communication.composers.MessageComposer;
 import com.openhabbo.api.communication.data.OutgoingMessageWrapper;
+import com.openhabbo.api.communication.headers.MessageHeaderProviderService;
+import com.openhabbo.peer.networking.codec.encoding.Base64Codec;
 import com.openhabbo.peer.networking.codec.encoding.WireCodec;
 import io.netty.buffer.ByteBuf;
 
 public class MessageComposerData implements OutgoingMessageWrapper {
 
-    private final int header;
     private final ByteBuf buffer;
 
-    public MessageComposerData(int header, ByteBuf buffer) {
-        this.header = header;
+    public MessageComposerData(Class<? extends MessageComposer> clazz, ByteBuf buffer) {
         this.buffer = buffer;
 
-        this.writeInteger(header);
-    }
-
-    @Override
-    public int getHeader() {
-        return this.header;
+        this.buffer.writeBytes(Base64Codec.encodeInt(MessageHeaderProviderService.getProvider().getHeaderByComposerClass(clazz), 2));
     }
 
     @Override
     public void writeString(String data) {
         this.buffer.writeBytes(data.getBytes());
+        this.buffer.writeByte(2);
     }
 
     @Override
@@ -38,7 +35,7 @@ public class MessageComposerData implements OutgoingMessageWrapper {
 
     @Override
     public void writeBoolean(boolean data) {
-        this.buffer.writeByte((byte) (data ? 'I' : 'H'));
+        this.writeByte((byte) (data ? 73 : 72));
     }
 
     @Override

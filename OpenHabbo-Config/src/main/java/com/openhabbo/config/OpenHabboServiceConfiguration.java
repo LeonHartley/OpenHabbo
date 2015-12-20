@@ -16,21 +16,18 @@ public class OpenHabboServiceConfiguration {
     private final OpenHabboService masterService;
 
     private final Map<String, OpenHabboService> peerServices;
-    private final Map<String, OpenHabboService> authServices;
-    private final Map<String, OpenHabboService> accountServices;
+    private final Map<String, OpenHabboService> storageServices;
 
     private final String authenticationToken;
     private final List<String> allowedIpAddresses;
 
     public OpenHabboServiceConfiguration(OpenHabboService masterService,
                                          Map<String, OpenHabboService> peerServices,
-                                         Map<String, OpenHabboService> authServices,
-                                         Map<String, OpenHabboService> accountServices,
+                                         Map<String, OpenHabboService> storageServices,
                                          String authenticationToken, List<String> allowedIpAddresses) {
         this.masterService = masterService;
         this.peerServices = peerServices;
-        this.authServices = authServices;
-        this.accountServices = accountServices;
+        this.storageServices = storageServices;
         this.authenticationToken = authenticationToken;
         this.allowedIpAddresses = allowedIpAddresses;
     }
@@ -41,39 +38,32 @@ public class OpenHabboServiceConfiguration {
         final String masterService = config.getString("openhabbo-services.masterService");
 
         final List<String> peerServiceData = config.getStringList("openhabbo-services.peerServices");
-        final List<String> authServiceData = config.getStringList("openhabbo-services.authServices");
-        final List<String> accountServiceData = config.getStringList("openhabbo-services.accountServices");
+        final List<String> storageServiceData = config.getStringList("openhabbo-services.storageServices");
 
         final String authenticationToken = config.getString("openhabbo-services.security.authenticationToken");
         final List<String> allowedIpAddresses = config.getStringList("openhabbo-services.security.allowedIpAddresses");
 
         final Map<String, OpenHabboService> peerServices = new HashMap<>();
-        final Map<String, OpenHabboService> authServices = new HashMap<>();
-        final Map<String, OpenHabboService> accountServices = new HashMap<>();
+        final Map<String, OpenHabboService> storageServices = new HashMap<>();
 
         for (String peerService : peerServiceData) {
             OpenHabboService service = OpenHabboService.create(peerService);
             peerServices.put(service.getAlias(), service);
         }
 
-        for (String authService : authServiceData) {
-            OpenHabboService service = OpenHabboService.create(authService);
-            authServices.put(service.getAlias(), service);
+        for (String storageService : storageServiceData) {
+            OpenHabboService service = OpenHabboService.create(storageService);
+            storageServices.put(service.getAlias(), service);
         }
 
-        for (String accountService : accountServiceData) {
-            OpenHabboService service = OpenHabboService.create(accountService);
-            accountServices.put(service.getAlias(), service);
-        }
 
         log.debug("Service configuration loaded, found " +
-                        "{} peer service(s), " +
-                        "{} auth service(s) and " +
-                        "{} account service(s).",
-                peerServices.size(), authServices.size(), accountServices.size());
+                        "{} peer service(s) and " +
+                        "{} storage service(s)",
+                peerServices.size(), storageServices.size());
 
-        return new OpenHabboServiceConfiguration(OpenHabboService.create(masterService), peerServices, authServices,
-                accountServices, authenticationToken,
+        return new OpenHabboServiceConfiguration(OpenHabboService.create(masterService), peerServices, storageServices,
+                 authenticationToken,
                 allowedIpAddresses);
     }
 
@@ -81,12 +71,8 @@ public class OpenHabboServiceConfiguration {
         return peerServices;
     }
 
-    public Map<String, OpenHabboService> getAuthServices() {
-        return authServices;
-    }
-
-    public Map<String, OpenHabboService> getAccountServices() {
-        return accountServices;
+    public Map<String, OpenHabboService> getStorageServices() {
+        return storageServices;
     }
 
     public String getAuthenticationToken() {

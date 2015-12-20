@@ -1,19 +1,16 @@
-var caminte = require('caminte');
-var schema = new caminte.Schema('mysql', {
-    host: 'localhost',
-    username: 'root',
-    password: '',
-    database: 'openhabbo'
+var storage = require('./storage.js'),
+    web = require('./web.js'),
+    domain = require('domain').create();
+
+domain.on('error', function(err) {
+    console.log('Uncaught error', err.message);
 });
 
-// configure the schemas
-var Player = schema.define('Player', require('./models/player.js'));
-
-Player.update({where: {accountId: 1}}, {
-    authenticationTicket: null
-}, function (err) {
-    console.log(err);
-});
+//Player.update({where: {accountId: 1}}, {
+//    authenticationTicket: null
+//}, function (err) {
+//    console.log(err);
+//});
 
 //Player.findOne({where: { accountId: 1 }}, function(err, player) {
 //    if(err) {
@@ -29,8 +26,6 @@ Player.update({where: {accountId: 1}}, {
 //}, function (err) {
 //    console.log(err);
 //});
-
-
 
 //Player.find({ where: { username: 'Leon' } }, function(err, players) {
 //    console.log(err);

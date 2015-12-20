@@ -1,21 +1,25 @@
 package com.openhabbo.commons.web;
 
 import com.mashape.unirest.http.HttpMethod;
+import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.async.Callback;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
 import com.openhabbo.commons.web.requests.ServiceRequest;
 import com.openhabbo.commons.web.requests.master.InitializeMasterMessage;
 import com.openhabbo.commons.web.requests.types.MasterServiceRequest;
 import com.openhabbo.commons.web.requests.types.PeerServiceRequest;
+import com.openhabbo.commons.web.requests.types.StorageServiceRequest;
 import com.openhabbo.config.OpenHabboServiceConfiguration;
 import com.openhabbo.config.services.OpenHabboService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class WebClient {
     private static final Logger log = LogManager.getLogger(WebClient.class.getName());
@@ -38,7 +42,7 @@ public class WebClient {
         this.dispatchRequest(serviceAlias, serviceRequest, null);
     }
 
-    public void dispatchRequest(String serviceAlias, ServiceRequest serviceRequest, Callback<JsonNode> callback) {
+    public void dispatchRequest(String serviceAlias, ServiceRequest serviceRequest, Consumer<JsonNode> callback) {
         if (this.serviceConfiguration == null) {
             log.warn("WebClient is not initialized, no services could be found");
             return;
@@ -50,6 +54,8 @@ public class WebClient {
             service = this.serviceConfiguration.getPeerServices().get(serviceAlias);
         } else if(serviceRequest instanceof MasterServiceRequest) {
             service = this.serviceConfiguration.getMasterService();
+        } else if(serviceRequest instanceof StorageServiceRequest) {
+            service = this.serviceConfiguration.getStorageServices().get(serviceAlias);
         }
 
         if (service == null) {
@@ -81,7 +87,22 @@ public class WebClient {
         if (callback == null) {
             request.asStringAsync();
         } else {
-            request.asJsonAsync(callback);
+            request.asJsonAsync(new Callback<JsonNode>() {
+                @Override
+                public void completed(HttpResponse<JsonNode> httpResponse) {
+                    callback.accept(httpResponse.getBody());
+                }
+
+                @Override
+                public void failed(UnirestException e) {
+                    // todo: handle these.
+                }
+
+                @Override
+                public void cancelled() {
+                    // todo: handle these.
+                }
+            });
         }
     }
 

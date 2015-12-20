@@ -4,6 +4,7 @@ import com.openhabbo.commons.web.WebClient;
 import com.openhabbo.config.OpenHabboPeerServiceConfiguration;
 import com.openhabbo.config.OpenHabboServiceConfiguration;
 import com.openhabbo.peer.networking.GameNetworkService;
+import com.openhabbo.peer.networking.codec.encoding.Base64Codec;
 import com.openhabbo.peer.web.PeerWebService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
