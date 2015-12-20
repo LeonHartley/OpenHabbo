@@ -10,12 +10,19 @@ import com.openhabbo.commons.json.JsonUtil;
 import com.openhabbo.commons.web.WebClient;
 import com.openhabbo.commons.web.requests.storage.AuthenticateSessionMessage;
 import com.openhabbo.communication.composers.handshake.AuthenticationOKMessageComposer;
+import com.openhabbo.communication.composers.handshake.SessionParamsMessageComposer;
 import com.openhabbo.communication.composers.notifications.MOTDNotificationMessageComposer;
+import com.openhabbo.communication.events.handshake.InfoRetrieveMessageEvent;
+import com.openhabbo.communication.events.handshake.InitCryptoMessageEvent;
 import com.openhabbo.communication.events.handshake.SSOTicketMessageEvent;
+import com.openhabbo.communication.parsers.handshake.InfoRetrieveMessageParser;
+import com.openhabbo.communication.parsers.handshake.InitCryptoMessageParser;
 import com.openhabbo.communication.parsers.handshake.SSOTicketMessageParser;
 import com.openhabbo.core.sessions.PlayerSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.sound.midi.MidiDevice;
 
 
 public class HandshakeMessageHandler implements SessionComponent {
@@ -30,14 +37,21 @@ public class HandshakeMessageHandler implements SessionComponent {
 
     @Override
     public void initialize() {
+        this.playerSession.registerEvent(new InitCryptoMessageEvent(this::onInitCrypto));
         this.playerSession.registerEvent(new SSOTicketMessageEvent(this::onAuthRequest));
     }
 
     @Override
     public void dispose() {
+        this.playerSession.unregisterEvent(InitCryptoMessageParser.class);
+
         if(!this.authRequestReceived) {
             this.playerSession.unregisterEvent(SSOTicketMessageEvent.class);
         }
+    }
+
+    public void onInitCrypto(InitCryptoMessageParser parser) {
+        this.playerSession.send(new SessionParamsMessageComposer());
     }
 
     public void onAuthRequest(SSOTicketMessageParser parser) {

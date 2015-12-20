@@ -19,11 +19,11 @@ module.exports = {
                 }
 
                 // nullify the ticket.
-                Player.update({where: {accountId: player.accountId}}, {
-                    authenticationTicket: null
-                }, function (err) {
-
-                });
+                //Player.update({where: {accountId: player.accountId}}, {
+                //    authenticationTicket: null
+                //}, function (err) {
+                //
+                //});
 
                 sendAsJson({authenticated: true, data: player}, res);
             });

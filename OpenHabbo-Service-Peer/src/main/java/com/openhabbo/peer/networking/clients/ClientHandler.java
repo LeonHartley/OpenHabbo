@@ -37,12 +37,6 @@ public class ClientHandler extends SimpleChannelInboundHandler<IncomingMessageWr
             session.initialize();
         }
 
-        //topkek amirite?
-        if (wrapper.getHeader() == 206) {
-            channelHandlerContext.writeAndFlush("DAQBHHIIKHJIPAIQAdd-MM-yyyy\u0002SAHPB/client\u0002QBH\u0001");
-            return;
-        }
-
         session.handleEvent(wrapper.getHeader(), wrapper);
     }
 

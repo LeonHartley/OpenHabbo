@@ -76,6 +76,7 @@ public class MessageEventContainer implements EventHandler, EventRegistry {
     @Override
     public void handleEvent(short headerId, IncomingMessageWrapper messageWrapper) {
         if (!this.messageListeners.containsKey(headerId)) {
+            log.debug("Unhandled message event: {}", MessageHeaderProviderService.getProvider().getEventClassByHeader(headerId).getName());
             return;
         }
 
@@ -86,7 +87,7 @@ public class MessageEventContainer implements EventHandler, EventRegistry {
                 event.onComplete(messageWrapper);
             } catch (Exception e) {
                 // todo: log
-                e.printStackTrace();
+                log.error("Error while handling event with ID {}. {}", headerId, e);
             }
         }
     }
