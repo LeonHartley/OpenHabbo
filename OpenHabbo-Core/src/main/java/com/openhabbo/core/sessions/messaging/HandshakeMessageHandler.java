@@ -60,7 +60,7 @@ public class HandshakeMessageHandler implements SessionComponent {
                         this.playerSession.send(new MOTDNotificationMessageComposer("Hi " + player.getUsername() + "!\n\nWelcome to OpenHabbo, the world's first distributed Habbo Hotel private server!"));
                     }
                 } catch(Exception e) {
-                    this.playerSession.send(new MOTDNotificationMessageComposer("An unknown error occured while loading your player data!"));
+                    this.playerSession.send(new MOTDNotificationMessageComposer("An unknown error occurred while loading your player data!"));
                 }
             } else {
                 // obv wont show this in production, will just disconnect them.:p
