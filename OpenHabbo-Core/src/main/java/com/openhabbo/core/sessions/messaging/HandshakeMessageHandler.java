@@ -62,6 +62,9 @@ public class HandshakeMessageHandler implements SessionComponent {
         // submit authentication request to an auth service.
         log.trace("Session ID: " + this.playerSession.getSessionId());
 
+        log.info("Authentication requested");
+        long time = System.currentTimeMillis();
+
         WebClient.getInstance().dispatchRequest("storageservice-1", new AuthenticateSessionMessage(parser.getSsoTicket()), (data) -> {
             final boolean authenticationSuccessful = data.getObject().getBoolean("authenticated");
 
@@ -70,6 +73,7 @@ public class HandshakeMessageHandler implements SessionComponent {
                     Player player = JsonUtil.parse(Player.class, data.getObject().getJSONObject("data").toString());
 
                     if(player != null) {
+                        log.trace("Authentication success! Took {}ms", System.currentTimeMillis() - time);
                         this.playerSession.send(new AuthenticationOKMessageComposer());
                         this.playerSession.send(new MOTDNotificationMessageComposer("Hi " + player.getUsername() + "!\n\nWelcome to OpenHabbo, the world's first distributed Habbo Hotel private server!"));
                     }
