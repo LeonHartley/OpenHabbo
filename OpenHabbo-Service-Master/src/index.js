@@ -7,11 +7,15 @@ var express = require('express'),
 app.use(bodyParser.urlencoded({ extended: false }));
 
 var sessions = require('./routes/sessions.js');
-sessions.initialize();
+var rooms = require('./routes/rooms.js');
 
 app.post("/sessions/register", sessions.registerSession);
 app.post("/sessions/unregister", sessions.unregisterSession);
 app.post("/sessions/findAlias", sessions.findAlias);
+
+app.post("/rooms/register", rooms.registerSession);
+app.post("/rooms/unregister", rooms.unregisterSession);
+app.post("/rooms/findAlias", rooms.findAlias);
 
 app.get('/', function(req, res) {
     res.writeHead(200, { 'Content-Type': 'application/json' });

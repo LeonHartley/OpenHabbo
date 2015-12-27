@@ -1,12 +1,13 @@
 var sendAsJson = require('../util/response.js').sendAsJson;
 var monitoring = require('../monitoring/monitoring.js');
-var sessions = {};
+
+var rooms = {};
 
 module.exports = {
-    
-    registerSession: function(req, res) {
-        sessions[req.body.sessionId] = {
-            id: req.body.sessionId,
+
+    registerRoom: function(req, res) {
+        rooms[req.body.roomId] = {
+            id: req.body.roomId,
             serviceAlias: req.body.serviceAlias
         };
 
@@ -16,25 +17,25 @@ module.exports = {
             event: "log",
             data: {
                 level: "debug",
-                msg: "Session '" + req.body.sessionId + "' has been registered to service: " + req.body.serviceAlias
+                msg: "Room '" + req.body.roomId + "' has been registered to service: " + req.body.serviceAlias
             }
         });
     },
 
-    unregisterSession: function(req, res) {
+    unregisterRoom: function(req, res) {
         monitoring.getSockets().emit("log", {
             event: "log",
             data: {
                 level: "debug",
-                msg: "Session '" + req.body.sessionId + "' has been unregistered from service: " + sessions[req.body.sessionId].serviceAlias
+                msg: "Room '" + req.body.roomId + "' has been unregistered from service: " + sessions[req.body.roomId].serviceAlias
             }
         });
 
-        delete sessions[req.body.sessionId];
+        delete rooms[req.body.roomId];
         sendAsJson({ "success": true}, res);
     },
 
     findAlias: function(req, res) {
-        sendAsJson({ "serviceAlias": sessions[req.body.sessionId].serviceAlias}, res);
+        sendAsJson({ "serviceAlias": sessions[req.body.roomId].serviceAlias}, res);
     }
 };
