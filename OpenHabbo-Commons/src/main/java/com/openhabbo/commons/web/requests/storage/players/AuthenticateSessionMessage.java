@@ -1,4 +1,4 @@
-package com.openhabbo.commons.web.requests.storage;
+package com.openhabbo.commons.web.requests.storage.players;
 
 import com.mashape.unirest.http.HttpMethod;
 import com.mashape.unirest.request.HttpRequestWithBody;
@@ -11,11 +11,6 @@ public class AuthenticateSessionMessage extends StorageServiceRequest {
 
     public AuthenticateSessionMessage(String authenticationTicket) {
         this.authenticationTicket = authenticationTicket;
-    }
-
-    @Override
-    public Map<String, Object> getParameters() {
-        return null;
     }
 
     @Override

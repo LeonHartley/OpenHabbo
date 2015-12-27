@@ -2,9 +2,11 @@ package com.openhabbo.core.sessions.messaging;
 
 import com.openhabbo.api.communication.sessions.SessionComponent;
 import com.openhabbo.api.data.players.Player;
+import com.openhabbo.api.data.rooms.Room;
 import com.openhabbo.commons.json.JsonUtil;
 import com.openhabbo.commons.web.WebClient;
-import com.openhabbo.commons.web.requests.storage.AuthenticateSessionMessage;
+import com.openhabbo.commons.web.requests.storage.players.AuthenticateSessionMessage;
+import com.openhabbo.commons.web.requests.storage.rooms.FindRoomMessage;
 import com.openhabbo.communication.composers.handshake.AuthenticationOKMessageComposer;
 import com.openhabbo.communication.composers.handshake.SessionParamsMessageComposer;
 import com.openhabbo.communication.composers.notifications.MOTDNotificationMessageComposer;
@@ -46,7 +48,7 @@ public class HandshakeMessageHandler implements SessionComponent {
     }
 
     public void onAuthRequest(SSOTicketMessageParser parser) {
-        if(this.playerSession.getPlayerData() != null) {
+        if (this.playerSession.getPlayerData() != null) {
             return;
         }
 
@@ -71,6 +73,7 @@ public class HandshakeMessageHandler implements SessionComponent {
                         log.trace("Authentication success! Took {}ms", System.currentTimeMillis() - time);
 
                         this.playerSession.send(new AuthenticationOKMessageComposer());
+                        this.playerSession.onLoginSuccessful();
                     }
                 } catch (Exception e) {
                     this.playerSession.send(new MOTDNotificationMessageComposer("An unknown error occurred while loading your player data!"));

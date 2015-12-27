@@ -8,9 +8,13 @@ import com.openhabbo.api.communication.events.MessageEvent;
 import com.openhabbo.api.communication.sessions.Session;
 import com.openhabbo.api.communication.sessions.util.DisconnectReason;
 import com.openhabbo.api.data.players.Player;
+import com.openhabbo.api.data.rooms.Room;
+import com.openhabbo.commons.json.JsonUtil;
 import com.openhabbo.commons.web.WebClient;
 import com.openhabbo.commons.web.requests.master.MasterSessionRegisterMessage;
 import com.openhabbo.commons.web.requests.master.MasterSessionUnregisterMessage;
+import com.openhabbo.commons.web.requests.storage.rooms.FindOwnRoomsMessage;
+import com.openhabbo.commons.web.requests.storage.rooms.FindRoomMessage;
 import com.openhabbo.config.services.OpenHabboService;
 import com.openhabbo.core.sessions.components.MessageEventContainer;
 import com.openhabbo.core.sessions.messaging.HandshakeMessageHandler;
@@ -82,6 +86,14 @@ public class PlayerSession implements Session, EventRegistry {
     public void disconnect(DisconnectReason reason) {
         // Log the disconnection along with the reason.
         this.channel.disconnect();
+    }
+
+    @Override
+    public void onLoginSuccessful() {
+        // Load own rooms.
+        WebClient.getInstance().dispatchRequest("storageservice-1", new FindOwnRoomsMessage(this.playerData.getId()), (data) -> {
+            System.out.println(data.getObject().getJSONObject("data").toString());
+        });
     }
 
     @Override

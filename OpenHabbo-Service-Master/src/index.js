@@ -13,8 +13,8 @@ app.post("/sessions/register", sessions.registerSession);
 app.post("/sessions/unregister", sessions.unregisterSession);
 app.post("/sessions/findAlias", sessions.findAlias);
 
-app.post("/rooms/register", rooms.registerSession);
-app.post("/rooms/unregister", rooms.unregisterSession);
+app.post("/rooms/register", rooms.registerRoom);
+app.post("/rooms/unregister", rooms.unregisterRoom);
 app.post("/rooms/findAlias", rooms.findAlias);
 
 app.get('/', function(req, res) {

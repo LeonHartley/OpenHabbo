@@ -20,6 +20,8 @@ public interface Session extends EventHandler {
 
     boolean isInitialized();
 
+    void onLoginSuccessful();
+
     Player getPlayerData();
 
     void setPlayerData(Player playerData);
