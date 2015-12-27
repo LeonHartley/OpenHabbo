@@ -27,7 +27,7 @@ module.exports = {
             event: "log",
             data: {
                 level: "debug",
-                msg: "Room '" + req.body.roomId + "' has been unregistered from service: " + sessions[req.body.roomId].serviceAlias
+                msg: "Room '" + req.body.roomId + "' has been unregistered from service: " + rooms[req.body.roomId].serviceAlias
             }
         });
 
