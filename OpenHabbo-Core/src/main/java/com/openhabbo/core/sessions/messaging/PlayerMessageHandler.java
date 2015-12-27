@@ -4,7 +4,6 @@ import com.openhabbo.api.communication.sessions.SessionComponent;
 import com.openhabbo.api.communication.sessions.util.DisconnectReason;
 import com.openhabbo.communication.composers.handshake.UserObjectMessageComposer;
 import com.openhabbo.communication.composers.inventory.purse.CreditBalanceMessageComposer;
-import com.openhabbo.communication.composers.notifications.ActivityPointsMessageComposer;
 import com.openhabbo.communication.composers.notifications.HabboActivityPointNotificationMessageComposer;
 import com.openhabbo.communication.events.inventory.purse.GetCreditsInfoMessageEvent;
 import com.openhabbo.communication.events.users.ScrGetUserInfoMessageEvent;
@@ -33,7 +32,7 @@ public class PlayerMessageHandler implements SessionComponent {
     }
 
     public void onGetUserInfo(ScrGetUserInfoMessageParser parser) {
-        if(this.playerSession.getPlayerData() == null) {
+        if (this.playerSession.getPlayerData() == null) {
             this.playerSession.disconnect(DisconnectReason.ERROR);
             return;
         }
@@ -43,7 +42,7 @@ public class PlayerMessageHandler implements SessionComponent {
     }
 
     public void onGetCreditsInfo(GetCreditsInfoMessageParser parser) {
-        if(this.playerSession.getPlayerData() == null) {
+        if (this.playerSession.getPlayerData() == null) {
             this.playerSession.disconnect(DisconnectReason.ERROR);
         }
 

@@ -23,7 +23,6 @@ public class HandshakeMessageHandler implements SessionComponent {
     private static final Logger log = LogManager.getLogger(HandshakeMessageHandler.class);
 
     private final PlayerSession playerSession;
-    private boolean authRequestReceived = false;
 
     public HandshakeMessageHandler(PlayerSession playerSession) {
         this.playerSession = playerSession;
@@ -47,9 +46,11 @@ public class HandshakeMessageHandler implements SessionComponent {
     }
 
     public void onAuthRequest(SSOTicketMessageParser parser) {
-        log.trace("Player attempting to login with ticket \"{}\"", parser.getSsoTicket());
+        if(this.playerSession.getPlayerData() != null) {
+            return;
+        }
 
-        this.authRequestReceived = true;
+        log.trace("Player attempting to login with ticket \"{}\"", parser.getSsoTicket());
 
         // submit authentication request to an auth service.
         log.trace("Session ID: " + this.playerSession.getSessionId());
