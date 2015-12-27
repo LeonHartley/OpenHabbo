@@ -1,7 +1,7 @@
 package com.openhabbo.communication.events;
 
-import com.openhabbo.api.communication.events.MessageEvent;
 import com.openhabbo.api.communication.data.IncomingMessageWrapper;
+import com.openhabbo.api.communication.events.MessageEvent;
 import com.openhabbo.communication.parsers.AbstractMessageParser;
 
 import java.util.function.Consumer;

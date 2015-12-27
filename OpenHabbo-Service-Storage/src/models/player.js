@@ -4,5 +4,8 @@ module.exports = {
     accountId: { type: Number },
 
     gender: { type: String, limit: 1 },
-    figure: { type: String, limit: 512 }
-}
+    figure: { type: String, limit: 512 },
+
+    balanceCoins: { type: Number },
+    balanceActivityPoints: { type: Number }
+};

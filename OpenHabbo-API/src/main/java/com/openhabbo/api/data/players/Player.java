@@ -10,13 +10,18 @@ public class Player {
     private String gender;
     private String figure;
 
-    public Player(int id, String username, String authenticationTicket, int accountId, String gender, String figure) {
+    private int balanceCoins;
+    private int balanceActivityPoints;
+
+    public Player(int id, String username, String authenticationTicket, int accountId, String gender, String figure, int balanceCoins, int balanceActivityPoints) {
         this.id = id;
         this.username = username;
         this.authenticationTicket = authenticationTicket;
         this.accountId = accountId;
         this.gender = gender;
         this.figure = figure;
+        this.balanceCoins = balanceCoins;
+        this.balanceActivityPoints = balanceActivityPoints;
     }
 
     public int getId() {
@@ -65,5 +70,21 @@ public class Player {
 
     public void setFigure(String figure) {
         this.figure = figure;
+    }
+
+    public int getBalanceCoins() {
+        return balanceCoins;
+    }
+
+    public void setBalanceCoins(int balanceCoins) {
+        this.balanceCoins = balanceCoins;
+    }
+
+    public int getBalanceActivityPoints() {
+        return balanceActivityPoints;
+    }
+
+    public void setBalanceActivityPoints(int balanceActivityPoints) {
+        this.balanceActivityPoints = balanceActivityPoints;
     }
 }

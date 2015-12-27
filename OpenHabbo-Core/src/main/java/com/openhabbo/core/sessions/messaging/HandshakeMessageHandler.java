@@ -1,9 +1,5 @@
 package com.openhabbo.core.sessions.messaging;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.async.Callback;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.openhabbo.api.communication.sessions.SessionComponent;
 import com.openhabbo.api.data.players.Player;
 import com.openhabbo.commons.json.JsonUtil;
@@ -12,17 +8,15 @@ import com.openhabbo.commons.web.requests.storage.AuthenticateSessionMessage;
 import com.openhabbo.communication.composers.handshake.AuthenticationOKMessageComposer;
 import com.openhabbo.communication.composers.handshake.SessionParamsMessageComposer;
 import com.openhabbo.communication.composers.notifications.MOTDNotificationMessageComposer;
-import com.openhabbo.communication.events.handshake.InfoRetrieveMessageEvent;
 import com.openhabbo.communication.events.handshake.InitCryptoMessageEvent;
 import com.openhabbo.communication.events.handshake.SSOTicketMessageEvent;
-import com.openhabbo.communication.parsers.handshake.InfoRetrieveMessageParser;
+import com.openhabbo.communication.events.users.GetMOTDMessageEvent;
 import com.openhabbo.communication.parsers.handshake.InitCryptoMessageParser;
 import com.openhabbo.communication.parsers.handshake.SSOTicketMessageParser;
+import com.openhabbo.communication.parsers.users.GetMOTDMessageParser;
 import com.openhabbo.core.sessions.PlayerSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import javax.sound.midi.MidiDevice;
 
 
 public class HandshakeMessageHandler implements SessionComponent {
@@ -39,15 +33,13 @@ public class HandshakeMessageHandler implements SessionComponent {
     public void initialize() {
         this.playerSession.registerEvent(new InitCryptoMessageEvent(this::onInitCrypto));
         this.playerSession.registerEvent(new SSOTicketMessageEvent(this::onAuthRequest));
+        this.playerSession.registerEvent(new GetMOTDMessageEvent(this::onGetMOTD));
     }
 
     @Override
     public void dispose() {
-        this.playerSession.unregisterEvent(InitCryptoMessageParser.class);
-
-        if(!this.authRequestReceived) {
-            this.playerSession.unregisterEvent(SSOTicketMessageEvent.class);
-        }
+        this.playerSession.unregisterEvent(InitCryptoMessageEvent.class);
+        this.playerSession.unregisterEvent(SSOTicketMessageEvent.class);
     }
 
     public void onInitCrypto(InitCryptoMessageParser parser) {
@@ -68,16 +60,18 @@ public class HandshakeMessageHandler implements SessionComponent {
         WebClient.getInstance().dispatchRequest("storageservice-1", new AuthenticateSessionMessage(parser.getSsoTicket()), (data) -> {
             final boolean authenticationSuccessful = data.getObject().getBoolean("authenticated");
 
-            if(authenticationSuccessful) {
+            if (authenticationSuccessful) {
                 try {
                     Player player = JsonUtil.parse(Player.class, data.getObject().getJSONObject("data").toString());
 
-                    if(player != null) {
+                    if (player != null) {
+                        this.playerSession.setPlayerData(player);
+
                         log.trace("Authentication success! Took {}ms", System.currentTimeMillis() - time);
+
                         this.playerSession.send(new AuthenticationOKMessageComposer());
-                        this.playerSession.send(new MOTDNotificationMessageComposer("Hi " + player.getUsername() + "!\n\nWelcome to OpenHabbo, the world's first distributed Habbo Hotel private server!"));
                     }
-                } catch(Exception e) {
+                } catch (Exception e) {
                     this.playerSession.send(new MOTDNotificationMessageComposer("An unknown error occurred while loading your player data!"));
                 }
             } else {
@@ -87,5 +81,13 @@ public class HandshakeMessageHandler implements SessionComponent {
         });
 
         this.playerSession.unregisterEvent(SSOTicketMessageEvent.class);
+    }
+
+    public void onGetMOTD(GetMOTDMessageParser parser) {
+        if (this.playerSession.getPlayerData() == null) {
+            return;
+        }
+
+        this.playerSession.send(new MOTDNotificationMessageComposer("Hi " + this.playerSession.getPlayerData().getUsername() + "!\n\nWelcome to OpenHabbo, the world's first distributed Habbo Hotel private server!"));
     }
 }

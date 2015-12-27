@@ -7,12 +7,15 @@ import com.openhabbo.api.communication.events.EventRegistry;
 import com.openhabbo.api.communication.events.MessageEvent;
 import com.openhabbo.api.communication.sessions.Session;
 import com.openhabbo.api.communication.sessions.util.DisconnectReason;
+import com.openhabbo.api.data.players.Player;
 import com.openhabbo.commons.web.WebClient;
 import com.openhabbo.commons.web.requests.master.MasterSessionRegisterMessage;
 import com.openhabbo.commons.web.requests.master.MasterSessionUnregisterMessage;
 import com.openhabbo.config.services.OpenHabboService;
 import com.openhabbo.core.sessions.components.MessageEventContainer;
 import com.openhabbo.core.sessions.messaging.HandshakeMessageHandler;
+import com.openhabbo.core.sessions.messaging.MessengerMessageHandler;
+import com.openhabbo.core.sessions.messaging.PlayerMessageHandler;
 import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,6 +32,10 @@ public class PlayerSession implements Session, EventRegistry {
     private boolean initialized = false;
 
     private final HandshakeMessageHandler handshakeMessageHandler;
+    private final PlayerMessageHandler playerMessageHandler;
+    private final MessengerMessageHandler messengerMessageHandler;
+
+    private Player playerData;
 
     public PlayerSession(UUID sessionId, Channel channel) {
         this.sessionId = sessionId;
@@ -39,11 +46,16 @@ public class PlayerSession implements Session, EventRegistry {
         // the session is fully initialized. Also, the messages should only be registered
         // when it's needed, any registered events that aren't needed are just a waste of memory.
         this.handshakeMessageHandler = new HandshakeMessageHandler(this);
+        this.playerMessageHandler = new PlayerMessageHandler(this);
+        this.messengerMessageHandler = new MessengerMessageHandler(this);
     }
 
     @Override
     public void initialize() {
         this.handshakeMessageHandler.initialize();
+        this.playerMessageHandler.initialize();
+        this.messengerMessageHandler.initialize();
+
         this.initialized = true;
 
         WebClient.getInstance().dispatchRequest("master", new MasterSessionRegisterMessage(this.getSessionId(), "peerservice-1"));
@@ -52,6 +64,8 @@ public class PlayerSession implements Session, EventRegistry {
     @Override
     public void dispose() {
         this.handshakeMessageHandler.dispose();
+        this.playerMessageHandler.dispose();
+
         this.messageEventContainer.unregisterAllEvents();
 
         if(this.isInitialized()) {
@@ -76,7 +90,7 @@ public class PlayerSession implements Session, EventRegistry {
     }
 
     @Override
-    public void unregisterEvent(Class event) {
+    public void unregisterEvent(Class<? extends MessageEvent> event) {
         this.messageEventContainer.unregisterEvent(event);
     }
 
@@ -92,5 +106,15 @@ public class PlayerSession implements Session, EventRegistry {
     @Override
     public boolean isInitialized() {
         return this.initialized;
+    }
+
+    @Override
+    public Player getPlayerData() {
+        return this.playerData;
+    }
+
+    @Override
+    public void setPlayerData(Player playerData) {
+        this.playerData = playerData;
     }
 }

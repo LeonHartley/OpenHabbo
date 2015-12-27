@@ -3,6 +3,7 @@ package com.openhabbo.api.communication.sessions;
 import com.openhabbo.api.communication.composers.MessageComposer;
 import com.openhabbo.api.communication.events.EventHandler;
 import com.openhabbo.api.communication.sessions.util.DisconnectReason;
+import com.openhabbo.api.data.players.Player;
 
 import java.util.UUID;
 
@@ -18,4 +19,8 @@ public interface Session extends EventHandler {
     UUID getSessionId();
 
     boolean isInitialized();
+
+    Player getPlayerData();
+
+    void setPlayerData(Player playerData);
 }
