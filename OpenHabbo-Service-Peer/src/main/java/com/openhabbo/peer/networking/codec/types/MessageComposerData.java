@@ -25,7 +25,7 @@ public class MessageComposerData implements OutgoingMessageWrapper {
 
     @Override
     public void writeInteger(int data) {
-        this.writeString(new String(WireCodec.encodeInt(data)));
+        this.buffer.writeBytes(WireCodec.encodeInt(data));
     }
 
     @Override

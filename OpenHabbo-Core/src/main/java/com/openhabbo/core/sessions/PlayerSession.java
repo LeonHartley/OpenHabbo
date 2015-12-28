@@ -1,5 +1,6 @@
 package com.openhabbo.core.sessions;
 
+import com.google.common.reflect.TypeToken;
 import com.openhabbo.api.communication.composers.MessageComposer;
 import com.openhabbo.api.communication.data.IncomingMessageWrapper;
 import com.openhabbo.api.communication.events.EventHandler;
@@ -19,11 +20,14 @@ import com.openhabbo.config.services.OpenHabboService;
 import com.openhabbo.core.sessions.components.MessageEventContainer;
 import com.openhabbo.core.sessions.messaging.HandshakeMessageHandler;
 import com.openhabbo.core.sessions.messaging.MessengerMessageHandler;
+import com.openhabbo.core.sessions.messaging.NavigatorMessageHandler;
 import com.openhabbo.core.sessions.messaging.PlayerMessageHandler;
 import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class PlayerSession implements Session, EventRegistry {
@@ -38,8 +42,11 @@ public class PlayerSession implements Session, EventRegistry {
     private final HandshakeMessageHandler handshakeMessageHandler;
     private final PlayerMessageHandler playerMessageHandler;
     private final MessengerMessageHandler messengerMessageHandler;
+    private final NavigatorMessageHandler navigatorMessageHandler;
 
     private Player playerData;
+
+    private List<Room> rooms;
 
     public PlayerSession(UUID sessionId, Channel channel) {
         this.sessionId = sessionId;
@@ -52,6 +59,7 @@ public class PlayerSession implements Session, EventRegistry {
         this.handshakeMessageHandler = new HandshakeMessageHandler(this);
         this.playerMessageHandler = new PlayerMessageHandler(this);
         this.messengerMessageHandler = new MessengerMessageHandler(this);
+        this.navigatorMessageHandler = new NavigatorMessageHandler(this);
     }
 
     @Override
@@ -59,6 +67,7 @@ public class PlayerSession implements Session, EventRegistry {
         this.handshakeMessageHandler.initialize();
         this.playerMessageHandler.initialize();
         this.messengerMessageHandler.initialize();
+        this.navigatorMessageHandler.initialize();
 
         this.initialized = true;
 
@@ -92,7 +101,12 @@ public class PlayerSession implements Session, EventRegistry {
     public void onLoginSuccessful() {
         // Load own rooms.
         WebClient.getInstance().dispatchRequest("storageservice-1", new FindOwnRoomsMessage(this.playerData.getId()), (data) -> {
-            System.out.println(data.getObject().getJSONObject("data").toString());
+            List<Room> rooms = JsonUtil.getGsonInstance().fromJson(data.getObject().getJSONArray("data").toString(), new TypeToken<ArrayList<Room>>() {
+            }.getType());
+
+            if(rooms != null) {
+                this.rooms = rooms;
+            }
         });
     }
 
@@ -128,5 +142,9 @@ public class PlayerSession implements Session, EventRegistry {
     @Override
     public void setPlayerData(Player playerData) {
         this.playerData = playerData;
+    }
+
+    public List<Room> getRooms() {
+        return rooms;
     }
 }

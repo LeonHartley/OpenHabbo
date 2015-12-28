@@ -17,6 +17,7 @@ module.exports = {
     name: {type: String, limit: 100},
     description: {type: String, limit: 200},
     playerId: { type: Number },
+    playerName: { type: String },
     accessType: { type: String, limit: 25 },
     password: { type: String, limit: 50 },
     rating: { type: Number },

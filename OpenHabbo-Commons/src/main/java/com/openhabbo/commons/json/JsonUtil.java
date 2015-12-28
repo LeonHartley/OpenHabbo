@@ -13,4 +13,8 @@ public class JsonUtil {
     public static String stringify(Object obj) {
         return gsonInstance.toJson(obj);
     }
+
+    public static Gson getGsonInstance() {
+        return gsonInstance;
+    }
 }

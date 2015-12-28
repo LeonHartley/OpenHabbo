@@ -20,7 +20,7 @@ public class FindOwnRoomsMessage extends StorageServiceRequest {
 
     @Override
     public String getEndpoint() {
-        return "/rooms/findOwn";
+        return "/room/findOwn";
     }
 
     @Override

@@ -18,9 +18,9 @@ public class MessageDecoder extends ByteToMessageDecoder {
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         try {
-            if (in.readableBytes() < 6) {
-                return;
-            }
+//            if (in.readableBytes() < 6) {
+//                return;
+//            }
 
             in.markReaderIndex();
 
@@ -37,6 +37,7 @@ public class MessageDecoder extends ByteToMessageDecoder {
 
             int header = Base64Codec.decodeInt(in.readBytes(2).array());
 
+            System.out.println(header);
             log.info("Decoded event data {}, length {}, header {}", in.toString(CharsetUtil.UTF_8), length - 2, header);
             out.add(new MessageEventData((short) header, in.readBytes(length - 2)));
         } catch (Exception e) {

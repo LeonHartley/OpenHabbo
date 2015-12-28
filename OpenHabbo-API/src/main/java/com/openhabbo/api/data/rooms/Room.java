@@ -7,6 +7,7 @@ public class Room {
     private String name;
     private String description;
     private int playerId;
+    private String playerName;
     private RoomAccessType accessType;
     private String password;
     private int rating;
@@ -17,11 +18,12 @@ public class Room {
     private String decorations;
     private String icon;
 
-    public Room(int id, String name, String description, int playerId, RoomAccessType accessType, String password, int rating, String model, boolean allowPets, boolean allowPetsEating, boolean disableBlocking, String decorations, String icon) {
+    public Room(int id, String name, String description, int playerId, String playerName, RoomAccessType accessType, String password, int rating, String model, boolean allowPets, boolean allowPetsEating, boolean disableBlocking, String decorations, String icon) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.playerId = playerId;
+        this.playerName = playerName;
         this.accessType = accessType;
         this.password = password;
         this.rating = rating;
@@ -135,5 +137,13 @@ public class Room {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
     }
 }

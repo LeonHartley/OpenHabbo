@@ -90,12 +90,16 @@ public class WebClient {
             request.asJsonAsync(new Callback<JsonNode>() {
                 @Override
                 public void completed(HttpResponse<JsonNode> httpResponse) {
-                    callback.accept(httpResponse.getBody());
+                    try {
+                        callback.accept(httpResponse.getBody());
+                    } catch(Exception e) {
+                        log.error("Unhandled WebClient exception", e);
+                    }
                 }
 
                 @Override
                 public void failed(UnirestException e) {
-                    // todo: handle these.
+                    log.error("Unhandled Unirest exception", e);
                 }
 
                 @Override
