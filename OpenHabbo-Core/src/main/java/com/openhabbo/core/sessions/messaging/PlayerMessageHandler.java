@@ -44,6 +44,7 @@ public class PlayerMessageHandler implements SessionComponent {
     public void onGetCreditsInfo(GetCreditsInfoMessageParser parser) {
         if (this.playerSession.getPlayerData() == null) {
             this.playerSession.disconnect(DisconnectReason.ERROR);
+            return;
         }
 
         this.playerSession.send(new CreditBalanceMessageComposer(this.playerSession.getPlayerData().getBalanceCoins()));
