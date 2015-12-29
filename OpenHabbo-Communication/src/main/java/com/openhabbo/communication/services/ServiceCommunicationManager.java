@@ -22,6 +22,8 @@ public class ServiceCommunicationManager implements Initializable {
     private String host;
     private int port;
 
+    private Channel channel;
+
     private final EventLoopGroup loopGroup = new NioEventLoopGroup(2);
 
     public ServiceCommunicationManager() {
@@ -58,8 +60,11 @@ public class ServiceCommunicationManager implements Initializable {
         });
 
         bootstrap.remoteAddress(this.host, this.port);
-        bootstrap.connect().addListener(new ConnectionListener());
 
+        ChannelFuture future = bootstrap.connect();
+
+        future.addListener(new ConnectionListener());
+        this.channel = future.channel();
         return bootstrap;
     }
 
@@ -77,10 +82,14 @@ public class ServiceCommunicationManager implements Initializable {
                 log.debug("Connection established to the Master service");
             }
         }
-    }
 
+    }
     public void reconnect() {
         ServiceCommunicationManager.getInstance().configureBootstrap(new Bootstrap());
+    }
+
+    public Channel getChannel() {
+        return channel;
     }
 
     public EventLoopGroup getLoopGroup() {
