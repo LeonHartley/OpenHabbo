@@ -2,13 +2,7 @@ package com.openhabbo.peer.networking.clients;
 
 import com.openhabbo.api.communication.data.IncomingMessageWrapper;
 import com.openhabbo.api.communication.sessions.Session;
-import com.openhabbo.commons.web.WebClient;
-import com.openhabbo.commons.web.requests.master.MasterSessionRegisterMessage;
-import com.openhabbo.commons.web.requests.master.MasterSessionUnregisterMessage;
-import com.openhabbo.communication.composers.handshake.AuthenticationOKMessageComposer;
-import com.openhabbo.communication.composers.notifications.MOTDNotificationMessageComposer;
 import com.openhabbo.core.sessions.SessionService;
-import com.openhabbo.peer.OpenHabboPeerService;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -48,7 +42,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<IncomingMessageWr
 
         Session session = SessionService.getInstance().createSession(ctx.channel());
 
-        if(session == null) {
+        if (session == null) {
             // disconnect if the session was not created successfully.
             ctx.close();
             return;
@@ -60,7 +54,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<IncomingMessageWr
         // dispatch disconnection event to all services that the session is connected to
         Session session = ctx.channel().attr(SessionService.SESSION_ATTRIBUTE).get();
 
-        if(session != null) {
+        if (session != null) {
             session.dispose();
         }
 
@@ -69,7 +63,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<IncomingMessageWr
     }
 
     public static ChannelHandler getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new ClientHandler();
         }
 

@@ -17,5 +17,16 @@ module.exports = {
 
     getSockets: function() {
         return io.sockets;
+    },
+
+    sendDebugLog: function(msg) {
+        this.getSockets().emit("log", {
+            event: "log",
+            data: {
+                level: "debug",
+                msg: msg
+            }
+        });
+
     }
 };

@@ -30,13 +30,13 @@ public class SessionRequests {
 
             Object obj = JsonUtil.parse(Class.forName(messageClass), messageContents);
 
-            if(!(obj instanceof MessageComposer)) {
-                res.put("error", "Message is invalid, send aborted");
+            if (!(obj instanceof MessageComposer)) {
+                res.put("error", "MessageArgs is invalid, send aborted");
                 return res;
             }
 
             session.send(((MessageComposer) obj));
-            res.put("success", "Message sent successfully");
+            res.put("success", "MessageArgs sent successfully");
         } else {
             // TODO: Sending multiple messages in 1 go
         }

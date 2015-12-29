@@ -69,11 +69,11 @@ public class GameNetworkService {
                 .childOption(ChannelOption.WRITE_BUFFER_LOW_WATER_MARK, 32 * 1024)
                 .childOption(ChannelOption.WRITE_BUFFER_HIGH_WATER_MARK, 64 * 1024);
 
-          for(int port : this.configuration.getGamePorts()) {
-              this.bind(bootstrap, this.configuration.getGameAddress(), port);
-          }
+        for (int port : this.configuration.getGamePorts()) {
+            this.bind(bootstrap, this.configuration.getGameAddress(), port);
+        }
 
-        log.info("OpenHabbo Peer Service listening on ports: {}",   this.configuration.getGamePorts());
+        log.info("OpenHabbo Peer Service listening on ports: {}", this.configuration.getGamePorts());
     }
 
     private void bind(ServerBootstrap bootstrap, String ip, int port) {

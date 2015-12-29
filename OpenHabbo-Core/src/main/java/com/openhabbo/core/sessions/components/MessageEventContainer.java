@@ -86,7 +86,6 @@ public class MessageEventContainer implements EventHandler, EventRegistry {
             try {
                 event.onComplete(messageWrapper);
             } catch (Exception e) {
-                // todo: log
                 log.error("Error while handling event with ID {}. {}", headerId, e);
             }
         }

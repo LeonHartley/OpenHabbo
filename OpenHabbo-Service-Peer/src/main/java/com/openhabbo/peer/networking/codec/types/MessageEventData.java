@@ -57,7 +57,7 @@ public class MessageEventData implements IncomingMessageWrapper {
     private byte[] readBytes(int num) {
         byte[] bytes = new byte[num];
 
-        for(int x = 0; x < num; x++) {
+        for (int x = 0; x < num; x++) {
             bytes[x] = this.buffer.readByte();
         }
 

@@ -1,10 +1,11 @@
 package com.openhabbo.peer;
 
+import com.openhabbo.api.services.OpenHabboService;
 import com.openhabbo.commons.web.WebClient;
+import com.openhabbo.communication.services.ServiceCommunicationManager;
 import com.openhabbo.config.OpenHabboPeerServiceConfiguration;
 import com.openhabbo.config.OpenHabboServiceConfiguration;
 import com.openhabbo.peer.networking.GameNetworkService;
-import com.openhabbo.peer.networking.codec.encoding.Base64Codec;
 import com.openhabbo.peer.web.PeerWebService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,9 +31,12 @@ public class OpenHabboPeerService {
     public void initialize(final String[] runtimeArguments) {
         this.runtimeArguments = runtimeArguments;
 
-        if(this.runtimeArguments.length != 0) {
+        if (this.runtimeArguments.length != 0) {
             this.serviceAlias = this.runtimeArguments[0].replace("--alias:", "");
         }
+
+        OpenHabboService.SERVICE_ALIAS = this.serviceAlias;
+        OpenHabboService.SERVICE_TYPE = "peer";
 
         this.log.info("Initializing OpenHabbo Peer Service ({})", this.serviceAlias);
 
@@ -49,6 +53,10 @@ public class OpenHabboPeerService {
         this.log.info("Initializing web service");
         WebClient.getInstance().initialize(this.serviceConfiguration);
         PeerWebService.getInstance().initialize();
+
+        // initialize master service connection
+        log.info("Initializing master service connection");
+        ServiceCommunicationManager.getInstance().initialize();
     }
 
     public OpenHabboServiceConfiguration getServiceConfiguration() {
@@ -57,14 +65,6 @@ public class OpenHabboPeerService {
 
     public OpenHabboPeerServiceConfiguration getPeerServiceConfiguration() {
         return peerServiceConfiguration;
-    }
-
-    public String[] getRuntimeArguments() {
-        return runtimeArguments;
-    }
-
-    public String getServiceAlias() {
-        return this.serviceAlias;
     }
 
     public static void main(String[] args) {

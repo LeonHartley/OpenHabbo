@@ -15,7 +15,11 @@
     <script>
         var socket = io.connect('http://localhost:3000');
         socket.on('log', function (obj) {
-            $('#console').append("<li class='list-group-item'>[" + obj.data.level.toUpperCase() + "] " + obj.data.msg + "</li>");
+            $('#console').append("<li class='list-group-item'>[" + obj.data.level.toUpperCase() + "][" + Date.now() + "] " + obj.data.msg + "</li>");
+
+            var consoleElement = document.getElementById("console");
+
+            consoleElement.scrollTop = consoleElement.scrollHeight;
         });
     </script>
 </head>
@@ -26,9 +30,9 @@
         <small>Event Monitoring</small>
     </h2>
 
-    <div class="panel panel-default" style="min-height: 800px; max-height: 800px;
+    <div class="panel panel-default" id="consoleContainer" >
+        <ul class="list-group" id="console" style="min-height: 800px; max-height: 800px;
     overflow: auto; overflow-y: scroll;">
-        <ul class="list-group" id="console">
         </ul>
     </div>
 </div>

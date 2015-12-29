@@ -8,7 +8,8 @@ import com.openhabbo.peer.web.requests.SessionRequests;
 import org.eclipse.jetty.util.log.Log;
 import spark.Spark;
 
-import static spark.Spark.*;
+import static spark.Spark.get;
+import static spark.Spark.post;
 
 public class PeerWebService {
     private static PeerWebService peerWebService;

@@ -1,7 +1,7 @@
 package com.openhabbo.api.communication.sessions;
 
-public interface SessionComponent {
-    void initialize();
+import com.openhabbo.api.util.Disposable;
+import com.openhabbo.api.util.Initializable;
 
-    void dispose();
+public interface SessionComponent extends Initializable, Disposable {
 }

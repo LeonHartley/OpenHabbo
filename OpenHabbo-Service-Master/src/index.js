@@ -3,6 +3,7 @@ var express = require('express'),
     app = express(),
     http = require('http'),
     monitoring = require('./monitoring/monitoring.js');
+    server = require('./server/server.js');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -39,11 +40,11 @@ app.get('/initialize', function(req, res) {
 
 app.use("/events", express.static('web'));
 
-var server = app.listen(3000, function() {
-    var host = server.address().address;
-    var port = server.address().port;
+var httpServer = app.listen(3000, function() {
+    var host = httpServer.address().address;
+    var port = httpServer.address().port;
 
     console.log('Master service listening at http://%s:%s', host, port);
 });
 
-monitoring.initialize(server);
+monitoring.initialize(httpServer);
