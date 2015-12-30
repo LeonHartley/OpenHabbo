@@ -25,6 +25,7 @@
         <module>OpenHabbo-Service-Peer</module>
         <module>OpenHabbo-Service-Master</module>
         <module>OpenHabbo-Service-Storage</module>
+        <module>OpenHabbo-Service-Room</module>
     </modules>
 
     <dependencies>

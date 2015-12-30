@@ -31,10 +31,10 @@ public class MessageEventData implements IncomingMessageWrapper {
     @Override
     public int readInteger() {
         int[] data = WireCodec.decodeInt(
-                this.buffer.readBytes(WireCodec.MAX_INTEGER_BYTE_AMOUNT).array()
+                this.buffer.readBytes(6)
         );
 
-        this.buffer.readerIndex((this.buffer.readerIndex() - 6) + data[1]);
+        this.buffer.readerIndex(this.buffer.readerIndex() - (6 - data[1]));
         return data[0];
     }
 

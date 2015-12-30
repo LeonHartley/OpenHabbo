@@ -12,6 +12,7 @@ import com.openhabbo.commons.web.requests.ServiceRequest;
 import com.openhabbo.commons.web.requests.master.InitializeMasterMessage;
 import com.openhabbo.commons.web.requests.types.MasterServiceRequest;
 import com.openhabbo.commons.web.requests.types.PeerServiceRequest;
+import com.openhabbo.commons.web.requests.types.RoomServiceRequest;
 import com.openhabbo.commons.web.requests.types.StorageServiceRequest;
 import com.openhabbo.config.OpenHabboServiceConfiguration;
 import com.openhabbo.config.services.OpenHabboService;
@@ -56,6 +57,8 @@ public class WebClient {
             service = this.serviceConfiguration.getMasterService();
         } else if(serviceRequest instanceof StorageServiceRequest) {
             service = this.serviceConfiguration.getStorageServices().get(serviceAlias);
+        } else if(serviceRequest instanceof RoomServiceRequest) {
+            service = this.serviceConfiguration.getRoomServices().get(serviceAlias);
         }
 
         if (service == null) {

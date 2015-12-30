@@ -1,13 +1,16 @@
 package com.openhabbo.peer.web.requests;
 
+import com.google.common.reflect.TypeToken;
 import com.openhabbo.api.communication.composers.MessageComposer;
 import com.openhabbo.api.communication.sessions.Session;
 import com.openhabbo.commons.json.JsonUtil;
-import com.openhabbo.core.sessions.SessionService;
+import com.openhabbo.commons.web.requests.peer.PeerSendMessage;
+import com.openhabbo.communication.sessons.SessionService;
 import spark.Request;
 import spark.Response;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -25,22 +28,30 @@ public class SessionRequests {
         }
 
         if (request.queryParams("message") != null) {
-            final String messageClass = request.queryParams("messageClass");
-            final String messageContents = request.queryParams("message");
+            session.send(createMessage(request.queryParams("messageClass"), request.queryParams("message"), res));
+        } else {
+            List<PeerSendMessage.PeerMsgData> messages = JsonUtil.getGsonInstance().fromJson(request.queryParams("messages"), new TypeToken<List<PeerSendMessage.PeerMsgData>>() {
+            }.getType());
 
-            Object obj = JsonUtil.parse(Class.forName(messageClass), messageContents);
-
-            if (!(obj instanceof MessageComposer)) {
-                res.put("error", "MessageArgs is invalid, send aborted");
-                return res;
+            if (messages != null) {
+                for (PeerSendMessage.PeerMsgData message : messages) {
+                    session.send(createMessage(message.getMessageClass(), message.getMessage(), res));
+                }
             }
 
-            session.send(((MessageComposer) obj));
-            res.put("success", "MessageArgs sent successfully");
-        } else {
-            // TODO: Sending multiple messages in 1 go
         }
 
         return res;
+    }
+
+    private static MessageComposer createMessage(String messageClass, String messageContents, Map<String, Object> response) throws ClassNotFoundException {
+        Object obj = JsonUtil.parse(Class.forName(messageClass), messageContents);
+
+        if (!(obj instanceof MessageComposer)) {
+            response.put("error", "MessageArgs is invalid, send aborted");
+            return null;
+        }
+
+        return ((MessageComposer) obj);
     }
 }

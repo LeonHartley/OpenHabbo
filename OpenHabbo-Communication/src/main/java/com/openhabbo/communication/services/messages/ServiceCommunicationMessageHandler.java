@@ -2,6 +2,7 @@ package com.openhabbo.communication.services.messages;
 
 import com.mashape.unirest.http.JsonNode;
 import com.openhabbo.communication.services.messages.handlers.GenericMessageHandler;
+import com.openhabbo.communication.services.messages.handlers.PeerMessageHandler;
 import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,6 +22,10 @@ public class ServiceCommunicationMessageHandler {
         this.messages = new ConcurrentHashMap<>();
 
         this.messages.put("hello", GenericMessageHandler::hello);
+
+        // session-related messages
+        this.messages.put("sessionRegistered", PeerMessageHandler::sessionRegistered);
+        this.messages.put("sessionUnregistered", PeerMessageHandler::sessionUnregistered);
     }
 
     public void handleMessage(String data, Channel channel) {

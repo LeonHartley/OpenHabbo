@@ -2,12 +2,16 @@ package com.openhabbo.core.sessions.messaging;
 
 import com.openhabbo.api.communication.sessions.SessionComponent;
 import com.openhabbo.api.communication.sessions.util.DisconnectReason;
+import com.openhabbo.commons.web.WebClient;
+import com.openhabbo.commons.web.requests.room.RoomLoadMessage;
 import com.openhabbo.communication.composers.handshake.UserObjectMessageComposer;
 import com.openhabbo.communication.composers.inventory.purse.CreditBalanceMessageComposer;
 import com.openhabbo.communication.composers.notifications.HabboActivityPointNotificationMessageComposer;
 import com.openhabbo.communication.events.inventory.purse.GetCreditsInfoMessageEvent;
+import com.openhabbo.communication.events.room.session.OpenFlatConnectionMessageEvent;
 import com.openhabbo.communication.events.users.ScrGetUserInfoMessageEvent;
 import com.openhabbo.communication.parsers.inventory.purse.GetCreditsInfoMessageParser;
+import com.openhabbo.communication.parsers.room.session.OpenFlatConnectionMessageParser;
 import com.openhabbo.communication.parsers.users.ScrGetUserInfoMessageParser;
 import com.openhabbo.core.sessions.PlayerSession;
 

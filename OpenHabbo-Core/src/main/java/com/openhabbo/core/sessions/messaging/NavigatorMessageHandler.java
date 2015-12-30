@@ -1,8 +1,9 @@
 package com.openhabbo.core.sessions.messaging;
 
 import com.openhabbo.api.communication.sessions.SessionComponent;
-import com.openhabbo.api.data.rooms.Room;
 import com.openhabbo.commons.collections.CollectionsUtil;
+import com.openhabbo.commons.web.WebClient;
+import com.openhabbo.commons.web.requests.room.RoomLoadMessage;
 import com.openhabbo.communication.composers.navigator.GuestRoomSearchResultMessageComposer;
 import com.openhabbo.communication.events.navigator.LatestEventsSearchMessageEvent;
 import com.openhabbo.communication.events.navigator.MyRoomsSearchMessageEvent;
@@ -11,8 +12,6 @@ import com.openhabbo.communication.parsers.navigator.LatestEventsSearchMessagePa
 import com.openhabbo.communication.parsers.navigator.MyRoomsSearchMessageParser;
 import com.openhabbo.communication.parsers.navigator.PopularRoomsSearchMessageParser;
 import com.openhabbo.core.sessions.PlayerSession;
-
-import java.util.ArrayList;
 
 public class NavigatorMessageHandler implements SessionComponent {
 

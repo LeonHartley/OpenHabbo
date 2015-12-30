@@ -2,7 +2,8 @@ package com.openhabbo.peer.networking.clients;
 
 import com.openhabbo.api.communication.data.IncomingMessageWrapper;
 import com.openhabbo.api.communication.sessions.Session;
-import com.openhabbo.core.sessions.SessionService;
+import com.openhabbo.communication.sessons.SessionService;
+import com.openhabbo.core.sessions.CoreSessionService;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -20,7 +21,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<IncomingMessageWr
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, IncomingMessageWrapper wrapper) throws Exception {
-        Session session = channelHandlerContext.channel().attr(SessionService.SESSION_ATTRIBUTE).get();
+        Session session = channelHandlerContext.channel().attr(CoreSessionService.SESSION_ATTRIBUTE).get();
 
         if (session == null) {
             // How do you expect us to handle the message if we aren't even a registered session? :P
@@ -52,13 +53,13 @@ public class ClientHandler extends SimpleChannelInboundHandler<IncomingMessageWr
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         // dispatch disconnection event to all services that the session is connected to
-        Session session = ctx.channel().attr(SessionService.SESSION_ATTRIBUTE).get();
+        Session session = ctx.channel().attr(CoreSessionService.SESSION_ATTRIBUTE).get();
 
         if (session != null) {
             session.dispose();
         }
 
-        ctx.channel().attr(SessionService.SESSION_ATTRIBUTE).remove();
+        ctx.channel().attr(CoreSessionService.SESSION_ATTRIBUTE).remove();
         this.activeConnections.decrementAndGet();
     }
 

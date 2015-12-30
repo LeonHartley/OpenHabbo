@@ -37,13 +37,10 @@ public class PeerSendMessage extends PeerServiceRequest {
     public void applyFields(HttpRequestWithBody request) {
         if (messageComposer == null && this.messageComposers != null) {
             // we are sending multiple messages.
-            List<Map<String, String>> messages = new ArrayList<>();
+            List<PeerMsgData> messages = new ArrayList<>();
 
             for (MessageComposer messageComposer : this.messageComposers) {
-                messages.add(new HashMap<String, String>() {{
-                    put("messageClass", messageComposer.getClass().getName());
-                    put("message", JsonUtil.stringify(messageComposer));
-                }});
+                messages.add(new PeerMsgData(messageComposer.getClass().getName(), JsonUtil.stringify(messageComposer)));
             }
 
             request.field("messages", JsonUtil.stringify(messages));
@@ -62,5 +59,23 @@ public class PeerSendMessage extends PeerServiceRequest {
     @Override
     public HttpMethod getMethod() {
         return HttpMethod.POST;
+    }
+
+    public class PeerMsgData {
+        private String messageClass;
+        private String message;
+
+        public PeerMsgData(String messageClass, String message) {
+            this.messageClass = messageClass;
+            this.message = message;
+        }
+
+        public String getMessageClass() {
+            return messageClass;
+        }
+
+        public String getMessage() {
+            return message;
+        }
     }
 }

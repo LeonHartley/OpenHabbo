@@ -7,12 +7,11 @@ var express = require('express'),
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
-var sessions = require('./routes/sessions.js');
 var rooms = require('./routes/rooms.js');
 
-app.post("/sessions/register", sessions.registerSession);
-app.post("/sessions/unregister", sessions.unregisterSession);
-app.post("/sessions/findAlias", sessions.findAlias);
+//app.post("/sessions/register", sessions.registerSession);
+//app.post("/sessions/unregister", sessions.unregisterSession);
+//app.post("/sessions/findAlias", sessions.findAlias);
 
 app.post("/rooms/register", rooms.registerRoom);
 app.post("/rooms/unregister", rooms.unregisterRoom);

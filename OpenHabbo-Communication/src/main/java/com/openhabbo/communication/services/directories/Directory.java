@@ -27,4 +27,8 @@ public class Directory<K, V> {
         this.directory.clear();
         this.directory.putAll(directory);
     }
+
+    public boolean isRegistered(K key) {
+        return this.directory.containsKey(key);
+    }
 }

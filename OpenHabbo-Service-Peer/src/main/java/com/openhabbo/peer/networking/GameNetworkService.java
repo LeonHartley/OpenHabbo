@@ -2,7 +2,9 @@ package com.openhabbo.peer.networking;
 
 import com.openhabbo.api.communication.headers.MessageHeaderProviderService;
 import com.openhabbo.communication.headers.DefaultMessageHeaderProvider;
+import com.openhabbo.communication.sessons.SessionService;
 import com.openhabbo.config.OpenHabboPeerServiceConfiguration;
+import com.openhabbo.core.sessions.CoreSessionService;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelOption;
@@ -25,11 +27,13 @@ public class GameNetworkService {
     public GameNetworkService(OpenHabboPeerServiceConfiguration configuration) {
         this.configuration = configuration;
 
-        // configure the message header provider service
+        // configure the services
         MessageHeaderProviderService.set(new DefaultMessageHeaderProvider());
+        SessionService.set(new CoreSessionService());
     }
 
     public void initialize() {
+
         EventLoopGroup acceptGroup;
         EventLoopGroup ioGroup;
         EventLoopGroup channelGroup;

@@ -1,7 +1,9 @@
 package com.openhabbo.communication.services;
 
 import com.openhabbo.api.util.Initializable;
+import com.openhabbo.commons.json.JsonUtil;
 import com.openhabbo.communication.services.clients.ServiceCommunicationHandler;
+import com.openhabbo.communication.services.messages.outgoing.Message;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -40,6 +42,10 @@ public class ServiceCommunicationManager implements Initializable {
         this.port = port;
 
         this.configureBootstrap(new Bootstrap());
+    }
+
+    public void sendMessage(Message message) {
+        this.channel.writeAndFlush(JsonUtil.stringify(message));
     }
 
     private Bootstrap configureBootstrap(Bootstrap bootstrap) {

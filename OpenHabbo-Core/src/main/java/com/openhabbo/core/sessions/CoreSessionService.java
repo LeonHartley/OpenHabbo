@@ -1,6 +1,7 @@
 package com.openhabbo.core.sessions;
 
 import com.openhabbo.api.communication.sessions.Session;
+import com.openhabbo.communication.sessons.SessionService;
 import io.netty.channel.Channel;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
@@ -13,7 +14,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SessionService {
+public class CoreSessionService extends SessionService {
     private static SessionService sessionFactory;
 
     private static final Logger log = LogManager.getLogger(SessionService.class.getName());
@@ -24,10 +25,11 @@ public class SessionService {
     private final Map<UUID, Session> sessions;
     private final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
-    public SessionService() {
+    public CoreSessionService() {
         this.sessions = new ConcurrentHashMap<>();
     }
 
+    @Override
     public Session createSession(Channel channel) {
         final UUID sessionId = UUID.randomUUID();
         final PlayerSession playerSession = new PlayerSession(sessionId, channel);
@@ -40,15 +42,14 @@ public class SessionService {
         return playerSession;
     }
 
-    public Session getSessionById(UUID id) {
-        return this.sessions.get(id);
+    @Override
+    public void destroySession(UUID id, Channel channel) {
+        this.sessions.remove(id);
+        this.channels.remove(channel);
     }
 
-    public static SessionService getInstance() {
-        if(sessionFactory == null) {
-            sessionFactory = new SessionService();
-        }
-
-        return sessionFactory;
+    @Override
+    public Session getSessionById(UUID id) {
+        return this.sessions.get(id);
     }
 }

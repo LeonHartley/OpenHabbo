@@ -1,5 +1,7 @@
 package com.openhabbo.peer.networking.codec.encoding;
 
+import io.netty.buffer.ByteBuf;
+
 public class WireCodec {
     public static final byte NEGATIVE = 72;
     public static final byte POSITIVE = 73;
@@ -25,17 +27,17 @@ public class WireCodec {
         return bytes;
     }
 
-    public static int[] decodeInt(byte[] bytes) {
+    public static int[] decodeInt(ByteBuf bytes) {
         int[] ret = new int[2];
         int pos = 0;
         int v = 0;
-        boolean negative = (bytes[pos] & 4) == 4;
-        ret[1] = bytes[pos] >> 3 & 7;
-        v = bytes[pos] & 3;
+        boolean negative = (bytes.getByte(pos) & 4) == 4;
+        ret[1] = bytes.getByte(pos) >> 3 & 7;
+        v = bytes.getByte(pos) & 3;
         pos++;
         int shiftAmount = 2;
         for (int b = 1; b < ret[1]; b++) {
-            v |= (bytes[pos] & 0x3f) << shiftAmount;
+            v |= (bytes.getByte(pos) & 0x3f) << shiftAmount;
             shiftAmount = 2 + 6 * b;
             pos++;
         }
