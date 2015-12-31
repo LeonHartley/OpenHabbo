@@ -26,6 +26,7 @@ public class RoomMessageHandler implements SessionComponent {
     }
 
     public void openFlatConnection(OpenFlatConnectionMessageParser parser) {
-        WebClient.getInstance().dispatchRequest("roomservice-1", new RoomLoadMessage(parser.getRoomId(), this.playerSession.getSessionId(), parser.getPassword()));
+        WebClient.getInstance().dispatchRequest("roomservice-1",
+                new RoomLoadMessage(parser.getRoomId(), this.playerSession.getSessionId(), parser.getPassword()));
     }
 }

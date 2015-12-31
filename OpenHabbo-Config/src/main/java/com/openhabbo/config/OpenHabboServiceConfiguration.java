@@ -25,7 +25,9 @@ public class OpenHabboServiceConfiguration {
     public OpenHabboServiceConfiguration(OpenHabboService masterService,
                                          Map<String, OpenHabboService> peerServices,
                                          Map<String, OpenHabboService> storageServices,
-                                         Map<String, OpenHabboService> roomServices, String authenticationToken, List<String> allowedIpAddresses) {
+                                         Map<String, OpenHabboService> roomServices,
+                                         String authenticationToken,
+                                         List<String> allowedIpAddresses) {
         this.masterService = masterService;
         this.peerServices = peerServices;
         this.storageServices = storageServices;

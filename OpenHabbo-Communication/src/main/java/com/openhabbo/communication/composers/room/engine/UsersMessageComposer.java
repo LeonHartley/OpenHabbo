@@ -6,6 +6,6 @@ import com.openhabbo.communication.composers.AbstractMessageComposer;
 public class UsersMessageComposer extends AbstractMessageComposer {
     @Override
     public void onCompose(OutgoingMessageWrapper data) {
-
+        data.writeInteger(0);
     }
 }

@@ -7,6 +7,7 @@ import com.openhabbo.communication.composers.notifications.MOTDNotificationMessa
 import com.openhabbo.communication.composers.room.engine.FloorHeightMapMessageComposer;
 import com.openhabbo.communication.composers.room.engine.HeightMapMessageComposer;
 import com.openhabbo.communication.composers.room.engine.RoomVisualizationSettingsMessageComposer;
+import com.openhabbo.communication.composers.room.engine.UsersMessageComposer;
 import com.openhabbo.communication.composers.room.session.OpenConnectionMessageComposer;
 import com.openhabbo.communication.composers.room.session.RoomReadyMessageComposer;
 import com.openhabbo.communication.services.directories.types.SessionDirectory;
@@ -53,6 +54,8 @@ public class RoomRequests {
         messages.add(new HeightMapMessageComposer(roomModel.getHeightMapString()));
         messages.add(new FloorHeightMapMessageComposer(roomModel.getFloorMapString()));
         messages.add(new RoomVisualizationSettingsMessageComposer());
+
+        messages.add(new UsersMessageComposer());
 
         SessionDirectory.getInstance().sendMessage(uuid, messages);
         return "{}";
