@@ -41,6 +41,7 @@ public class HandshakeMessageHandler implements SessionComponent {
     public void dispose() {
         this.playerSession.unregisterEvent(InitCryptoMessageEvent.class);
         this.playerSession.unregisterEvent(SSOTicketMessageEvent.class);
+        this.playerSession.unregisterEvent(GetMOTDMessageEvent.class);
     }
 
     public void onInitCrypto(InitCryptoMessageParser parser) {
