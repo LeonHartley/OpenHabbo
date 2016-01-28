@@ -4,3 +4,4 @@ OpenHabbo is a distributed Habbo Hotel private server written in Java & NodeJS. 
 The microservices communicate with each other using HTTP. Each microservice would be connected to a main service to monitor health, logging etc.
 
 The implementation of the Habbo protocol is currently only added as a placeholder, none of that stuff is final.
+
